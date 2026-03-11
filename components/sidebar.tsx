@@ -37,7 +37,7 @@ export function Sidebar({ apps, selectedAppId, onSelectApp, onAddApp }: SidebarP
           <Button 
             variant="ghost" 
             size="icon" 
-            className="shrink-0 rounded-full hover:bg-muted"
+            className="shrink-0 rounded-lg hover:bg-muted"
             onClick={() => setIsCollapsed(!isCollapsed)}
           >
             <Menu className="h-5 w-5" />
@@ -51,8 +51,8 @@ export function Sidebar({ apps, selectedAppId, onSelectApp, onAddApp }: SidebarP
             className={cn(
               "transition-all duration-300 ease-in-out shadow-sm hover:shadow-md",
               isCollapsed 
-                ? "w-12 h-12 rounded-2xl bg-primary/10 text-primary hover:bg-primary/20 mx-auto flex items-center justify-center p-0" 
-                : "w-full justify-start gap-3 rounded-2xl bg-primary/10 text-primary hover:bg-primary/20 px-4 py-6 text-base font-medium"
+                ? "w-12 h-12 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 mx-auto flex items-center justify-center p-0" 
+                : "w-full justify-start gap-3 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 px-4 py-6 text-base font-medium"
             )}
             variant="ghost"
           />
@@ -65,7 +65,7 @@ export function Sidebar({ apps, selectedAppId, onSelectApp, onAddApp }: SidebarP
                 variant={selectedAppId === 'home' || selectedAppId === null ? "secondary" : "ghost"} 
                 className={cn(
                   "w-full transition-all duration-200",
-                  isCollapsed ? "justify-center px-0 h-10 rounded-full" : "justify-start rounded-r-full rounded-l-none -ml-3 pl-6 h-10",
+                  isCollapsed ? "justify-center px-0 h-10 rounded-lg" : "justify-start rounded-r-lg rounded-l-none -ml-3 pl-6 h-10",
                   (selectedAppId === 'home' || selectedAppId === null) ? "" : "text-muted-foreground"
                 )}
                 onClick={() => {
@@ -106,12 +106,12 @@ export function Sidebar({ apps, selectedAppId, onSelectApp, onAddApp }: SidebarP
                       variant={selectedAppId === app.id ? "secondary" : "ghost"}
                       className={cn(
                         "w-full transition-all duration-200",
-                        isCollapsed ? "justify-center px-0 h-10 rounded-full" : "justify-start rounded-r-full rounded-l-none -ml-3 pl-6 h-10 font-normal"
+                        isCollapsed ? "justify-center px-0 h-10 rounded-lg" : "justify-start rounded-r-lg rounded-l-none -ml-3 pl-6 h-10 font-normal"
                       )}
                       onClick={() => onSelectApp(app.id)}
                     >
                       <div className={cn(
-                        "flex items-center justify-center shrink-0 rounded-full bg-muted text-muted-foreground font-semibold text-xs",
+                        "flex items-center justify-center shrink-0 rounded-lg bg-muted text-muted-foreground font-semibold text-xs",
                         isCollapsed ? "h-6 w-6" : "h-5 w-5 mr-4"
                       )}>
                         {app.name.charAt(0).toUpperCase()}
