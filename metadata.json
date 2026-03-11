@@ -1,0 +1,5 @@
+{
+  "name": "Account Vault",
+  "description": "Manage your accounts, API keys, tokens, and context across different applications.",
+  "requestFramePermissions": []
+}
