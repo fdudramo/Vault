@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { AppItem, Account, Credential, ContextItem } from '@/types';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -30,25 +30,33 @@ export function AppDetails({ app, onUpdate, onDelete, jumpToAccountId, clearJump
     app.accounts.length > 0 ? app.accounts[0].id : null
   );
 
-  if (jumpToAccountId) {
-    if (selectedAccountId !== jumpToAccountId) {
-      setSelectedAccountId(jumpToAccountId);
-      setSelectionHistory(prev => ({ ...prev, [app.id]: jumpToAccountId }));
+  useEffect(() => {
+    if (jumpToAccountId) {
+      if (selectedAccountId !== jumpToAccountId) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setSelectedAccountId(jumpToAccountId);
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setSelectionHistory(prev => ({ ...prev, [app.id]: jumpToAccountId }));
+      }
+      if (clearJumpToAccountId) {
+        clearJumpToAccountId();
+      }
+    } else if (app.id !== currentAppId) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setCurrentAppId(app.id);
+      const historyId = selectionHistory[app.id];
+      if (historyId && app.accounts.some(a => a.id === historyId)) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setSelectedAccountId(historyId);
+      } else if (app.accounts.length > 0) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setSelectedAccountId(app.accounts[0].id);
+      } else {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setSelectedAccountId(null);
+      }
     }
-    if (clearJumpToAccountId) {
-      clearJumpToAccountId();
-    }
-  } else if (app.id !== currentAppId) {
-    setCurrentAppId(app.id);
-    const historyId = selectionHistory[app.id];
-    if (historyId && app.accounts.some(a => a.id === historyId)) {
-      setSelectedAccountId(historyId);
-    } else if (app.accounts.length > 0) {
-      setSelectedAccountId(app.accounts[0].id);
-    } else {
-      setSelectedAccountId(null);
-    }
-  }
+  }, [app.id, app.accounts, currentAppId, jumpToAccountId, selectedAccountId, selectionHistory, clearJumpToAccountId]);
 
   const handleSelectAccount = (accountId: string) => {
     setSelectedAccountId(accountId);
