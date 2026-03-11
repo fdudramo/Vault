@@ -1,22 +1,16 @@
 "use client"
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useAppData } from '@/hooks/use-app-data';
 import { Sidebar } from '@/components/sidebar';
 import { AppDetails } from '@/components/app-details';
+import { HomeDashboard } from '@/components/home-dashboard';
 import { LayoutGrid } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 export default function Home() {
   const { apps, isLoaded, addApp, updateApp, deleteApp } = useAppData();
-  const [selectedAppId, setSelectedAppId] = useState<string | null>(null);
-
-  // Auto-select first app if none selected and apps exist
-  useEffect(() => {
-    if (isLoaded && !selectedAppId && apps.length > 0) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setSelectedAppId(apps[0].id);
-    }
-  }, [isLoaded, apps, selectedAppId]);
+  const [selectedAppId, setSelectedAppId] = useState<string | null>('home');
 
   if (!isLoaded) {
     return (
@@ -45,13 +39,22 @@ export default function Home() {
       
       <main className="flex-1 overflow-y-auto p-8">
         <div className="max-w-5xl mx-auto h-full">
-          {selectedApp ? (
+          {selectedAppId === 'home' || selectedAppId === null ? (
+            <HomeDashboard 
+              apps={apps} 
+              onSelectApp={setSelectedAppId} 
+              onAddApp={(app) => {
+                addApp(app);
+                setSelectedAppId(app.id);
+              }} 
+            />
+          ) : selectedApp ? (
             <AppDetails 
               app={selectedApp} 
               onUpdate={updateApp} 
               onDelete={(id) => {
                 deleteApp(id);
-                setSelectedAppId(null);
+                setSelectedAppId('home');
               }} 
             />
           ) : (
@@ -59,10 +62,17 @@ export default function Home() {
               <div className="p-4 bg-primary/5 rounded-full mb-4">
                 <LayoutGrid className="h-12 w-12 text-primary/40" />
               </div>
-              <h2 className="text-2xl font-semibold mb-2">Welcome to your Vault</h2>
+              <h2 className="text-2xl font-semibold mb-2">App not found</h2>
               <p className="text-muted-foreground max-w-md">
-                Select an application from the sidebar or create a new one to start managing your accounts, API keys, and context.
+                The selected application could not be found. It may have been deleted.
               </p>
+              <Button 
+                variant="outline" 
+                className="mt-4"
+                onClick={() => setSelectedAppId('home')}
+              >
+                Return Home
+              </Button>
             </div>
           )}
         </div>

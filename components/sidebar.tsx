@@ -4,7 +4,7 @@ import { AppItem } from '@/types';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { AddAppModal } from './add-app-modal';
-import { LayoutGrid, Settings } from 'lucide-react';
+import { LayoutGrid, Home } from 'lucide-react';
 import { ModeToggle } from './mode-toggle';
 
 interface SidebarProps {
@@ -25,7 +25,15 @@ export function Sidebar({ apps, selectedAppId, onSelectApp, onAddApp }: SidebarP
         <ModeToggle />
       </div>
       
-      <div className="p-4">
+      <div className="p-4 space-y-2">
+        <Button 
+          variant={selectedAppId === 'home' || selectedAppId === null ? "secondary" : "ghost"} 
+          className="w-full justify-start"
+          onClick={() => onSelectApp('home')}
+        >
+          <Home className="mr-2 h-4 w-4" />
+          Home
+        </Button>
         <AddAppModal onAdd={onAddApp} />
       </div>
       
