@@ -22,9 +22,28 @@ interface AppDetailsProps {
 }
 
 export function AppDetails({ app, onUpdate, onDelete }: AppDetailsProps) {
+  const [selectionHistory, setSelectionHistory] = useState<Record<string, string>>({});
+  const [currentAppId, setCurrentAppId] = useState(app.id);
   const [selectedAccountId, setSelectedAccountId] = useState<string | null>(
     app.accounts.length > 0 ? app.accounts[0].id : null
   );
+
+  if (app.id !== currentAppId) {
+    setCurrentAppId(app.id);
+    const historyId = selectionHistory[app.id];
+    if (historyId && app.accounts.some(a => a.id === historyId)) {
+      setSelectedAccountId(historyId);
+    } else if (app.accounts.length > 0) {
+      setSelectedAccountId(app.accounts[0].id);
+    } else {
+      setSelectedAccountId(null);
+    }
+  }
+
+  const handleSelectAccount = (accountId: string) => {
+    setSelectedAccountId(accountId);
+    setSelectionHistory(prev => ({ ...prev, [app.id]: accountId }));
+  };
 
   const handleAddAccount = (account: Account) => {
     const updatedApp = {
@@ -167,7 +186,7 @@ export function AppDetails({ app, onUpdate, onDelete }: AppDetailsProps) {
             {app.accounts.map((account) => (
               <button
                 key={account.id}
-                onClick={() => setSelectedAccountId(account.id)}
+                onClick={() => handleSelectAccount(account.id)}
                 className={`w-full text-left px-4 py-3 rounded-lg transition-all border ${
                   selectedAccountId === account.id
                     ? 'bg-blue-500/10 text-blue-700 border-blue-200 dark:bg-blue-500/20 dark:text-blue-300 dark:border-blue-500/30 shadow-sm'
