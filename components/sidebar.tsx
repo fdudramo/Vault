@@ -5,7 +5,7 @@ import { AppItem } from '@/types';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { AddAppModal } from './add-app-modal';
-import { LayoutGrid, Home, Menu, Search } from 'lucide-react';
+import { LayoutGrid, Menu, Search } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
@@ -20,14 +20,20 @@ export function Sidebar({ apps, selectedAppId, onSelectApp, onAddApp }: SidebarP
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   return (
-    <TooltipProvider delay={0}>
+    <TooltipProvider delay={500}>
       <div 
         className={cn(
           "flex flex-col h-screen border-r bg-card/50 transition-all duration-300 ease-in-out",
           isCollapsed ? "w-[72px]" : "w-64"
         )}
       >
-        <div className="p-4 flex items-center gap-4 h-16">
+        <div className={cn("p-4 flex items-center h-16", isCollapsed ? "justify-center" : "justify-between")}>
+          {!isCollapsed && (
+            <div className="flex items-center gap-2 font-semibold text-xl text-primary truncate">
+              <LayoutGrid className="h-6 w-6 shrink-0" />
+              <span>Vault</span>
+            </div>
+          )}
           <Button 
             variant="ghost" 
             size="icon" 
@@ -36,12 +42,6 @@ export function Sidebar({ apps, selectedAppId, onSelectApp, onAddApp }: SidebarP
           >
             <Menu className="h-5 w-5" />
           </Button>
-          {!isCollapsed && (
-            <div className="flex items-center gap-2 font-semibold text-xl text-primary truncate">
-              <LayoutGrid className="h-6 w-6 shrink-0" />
-              <span>Vault</span>
-            </div>
-          )}
         </div>
         
         <div className="px-3 py-2">
@@ -65,24 +65,8 @@ export function Sidebar({ apps, selectedAppId, onSelectApp, onAddApp }: SidebarP
                 variant={selectedAppId === 'home' || selectedAppId === null ? "secondary" : "ghost"} 
                 className={cn(
                   "w-full transition-all duration-200",
-                  isCollapsed ? "justify-center px-0 h-10 rounded-full" : "justify-start rounded-r-full rounded-l-none -ml-3 pl-6 h-10"
-                )}
-                onClick={() => onSelectApp('home')}
-              >
-                <Home className={cn("h-5 w-5", !isCollapsed && "mr-4")} />
-                {!isCollapsed && <span className="font-medium">Home</span>}
-              </Button>
-            } />
-            {isCollapsed && <TooltipContent side="right">Home</TooltipContent>}
-          </Tooltip>
-
-          <Tooltip>
-            <TooltipTrigger render={
-              <Button 
-                variant="ghost" 
-                className={cn(
-                  "w-full transition-all duration-200 text-muted-foreground",
-                  isCollapsed ? "justify-center px-0 h-10 rounded-full" : "justify-start rounded-r-full rounded-l-none -ml-3 pl-6 h-10"
+                  isCollapsed ? "justify-center px-0 h-10 rounded-full" : "justify-start rounded-r-full rounded-l-none -ml-3 pl-6 h-10",
+                  (selectedAppId === 'home' || selectedAppId === null) ? "" : "text-muted-foreground"
                 )}
                 onClick={() => {
                   onSelectApp('home');
