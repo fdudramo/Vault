@@ -17,6 +17,7 @@ import {
 } from '@/components/ui/dialog';
 import { AppItem } from '@/types';
 import { Plus } from 'lucide-react';
+import { toast } from 'sonner';
 
 interface AddAppModalProps {
   onAdd: (app: AppItem) => void;
@@ -46,6 +47,7 @@ export function AddAppModal({ onAdd }: AddAppModalProps) {
     setName('');
     setDescription('');
     setUrl('');
+    toast.success('App added successfully');
   };
 
   return (

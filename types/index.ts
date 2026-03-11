@@ -21,6 +21,7 @@ export interface Account {
   name: string; // e.g., "Personal", "Work", "Project X"
   email?: string;
   username?: string;
+  password?: string;
   authMethod: AuthMethod;
   credentials: Credential[];
   contexts: ContextItem[];

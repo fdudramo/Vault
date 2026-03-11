@@ -9,8 +9,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { AddAccountModal } from './add-account-modal';
 import { AddCredentialModal } from './add-credential-modal';
 import { AddContextModal } from './add-context-modal';
+import { ConfirmDeleteDialog } from './confirm-delete-dialog';
+import { CopyButton } from './copy-button';
 import { Copy, ExternalLink, Key, Link as LinkIcon, MessageSquare, Trash2, User } from 'lucide-react';
 import { format } from 'date-fns';
+import { toast } from 'sonner';
 
 interface AppDetailsProps {
   app: AppItem;
@@ -30,6 +33,7 @@ export function AppDetails({ app, onUpdate, onDelete }: AppDetailsProps) {
     };
     onUpdate(updatedApp);
     setSelectedAccountId(account.id);
+    toast.success('Account added successfully');
   };
 
   const handleDeleteAccount = (accountId: string) => {
@@ -41,6 +45,7 @@ export function AppDetails({ app, onUpdate, onDelete }: AppDetailsProps) {
     if (selectedAccountId === accountId) {
       setSelectedAccountId(updatedApp.accounts.length > 0 ? updatedApp.accounts[0].id : null);
     }
+    toast.success('Account deleted successfully');
   };
 
   const handleAddCredential = (accountId: string, credential: Credential) => {
@@ -54,6 +59,7 @@ export function AppDetails({ app, onUpdate, onDelete }: AppDetailsProps) {
       }),
     };
     onUpdate(updatedApp);
+    toast.success('Credential added successfully');
   };
 
   const handleDeleteCredential = (accountId: string, credentialId: string) => {
@@ -67,6 +73,7 @@ export function AppDetails({ app, onUpdate, onDelete }: AppDetailsProps) {
       }),
     };
     onUpdate(updatedApp);
+    toast.success('Credential deleted successfully');
   };
 
   const handleAddContext = (accountId: string, context: ContextItem) => {
@@ -80,6 +87,7 @@ export function AppDetails({ app, onUpdate, onDelete }: AppDetailsProps) {
       }),
     };
     onUpdate(updatedApp);
+    toast.success('Context added successfully');
   };
 
   const handleDeleteContext = (accountId: string, contextId: string) => {
@@ -93,11 +101,12 @@ export function AppDetails({ app, onUpdate, onDelete }: AppDetailsProps) {
       }),
     };
     onUpdate(updatedApp);
+    toast.success('Context deleted successfully');
   };
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
-    // Could add a toast here
+    toast.success('Copied to clipboard');
   };
 
   const selectedAccount = app.accounts.find(a => a.id === selectedAccountId);
@@ -122,10 +131,19 @@ export function AppDetails({ app, onUpdate, onDelete }: AppDetailsProps) {
             <p className="text-muted-foreground mt-2">{app.description}</p>
           )}
         </div>
-        <Button variant="destructive" size="sm" onClick={() => onDelete(app.id)}>
-          <Trash2 className="h-4 w-4 mr-2" />
-          Delete App
-        </Button>
+        <ConfirmDeleteDialog 
+          onConfirm={() => {
+            onDelete(app.id);
+            toast.success('App deleted successfully');
+          }}
+          title="Delete App?"
+          description={`Are you sure you want to delete "${app.name}"? This will permanently delete all associated accounts, credentials, and context.`}
+        >
+          <Button variant="destructive" size="sm">
+            <Trash2 className="h-4 w-4 mr-2" />
+            Delete App
+          </Button>
+        </ConfirmDeleteDialog>
       </div>
 
       <div className="flex items-center justify-between border-b pb-4">
@@ -182,25 +200,34 @@ export function AppDetails({ app, onUpdate, onDelete }: AppDetailsProps) {
                           <div className="flex items-center gap-2">
                             <span className="font-medium text-foreground">Email:</span>
                             <span>{selectedAccount.email}</span>
-                            <Button variant="ghost" size="icon" className="h-5 w-5" onClick={() => copyToClipboard(selectedAccount.email!)}>
-                              <Copy className="h-3 w-3" />
-                            </Button>
+                            <CopyButton textToCopy={selectedAccount.email} variant="ghost" size="icon" className="h-5 w-5" iconClassName="h-3 w-3" />
                           </div>
                         )}
                         {selectedAccount.username && (
                           <div className="flex items-center gap-2">
                             <span className="font-medium text-foreground">Username:</span>
                             <span>{selectedAccount.username}</span>
-                            <Button variant="ghost" size="icon" className="h-5 w-5" onClick={() => copyToClipboard(selectedAccount.username!)}>
-                              <Copy className="h-3 w-3" />
-                            </Button>
+                            <CopyButton textToCopy={selectedAccount.username} variant="ghost" size="icon" className="h-5 w-5" iconClassName="h-3 w-3" />
+                          </div>
+                        )}
+                        {selectedAccount.password && (
+                          <div className="flex items-center gap-2">
+                            <span className="font-medium text-foreground">Password:</span>
+                            <span className="font-mono tracking-widest">••••••••</span>
+                            <CopyButton textToCopy={selectedAccount.password} variant="ghost" size="icon" className="h-5 w-5" iconClassName="h-3 w-3" />
                           </div>
                         )}
                       </CardDescription>
                     </div>
-                    <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive hover:bg-destructive/10" onClick={() => handleDeleteAccount(selectedAccount.id)}>
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
+                    <ConfirmDeleteDialog
+                      onConfirm={() => handleDeleteAccount(selectedAccount.id)}
+                      title="Delete Account?"
+                      description={`Are you sure you want to delete the account "${selectedAccount.name}"? This will permanently delete all associated credentials and context.`}
+                    >
+                      <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive hover:bg-destructive/10">
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </ConfirmDeleteDialog>
                   </div>
                 </CardHeader>
                 <CardContent>
@@ -238,12 +265,16 @@ export function AppDetails({ app, onUpdate, onDelete }: AppDetailsProps) {
                                 </div>
                               </div>
                               <div className="flex items-center gap-2 shrink-0">
-                                <Button variant="secondary" size="sm" onClick={() => copyToClipboard(cred.value)}>
-                                  Copy
-                                </Button>
-                                <Button variant="ghost" size="icon" onClick={() => handleDeleteCredential(selectedAccount.id, cred.id)}>
-                                  <Trash2 className="h-4 w-4 text-muted-foreground" />
-                                </Button>
+                                <CopyButton textToCopy={cred.value} variant="secondary" size="sm" showText />
+                                <ConfirmDeleteDialog
+                                  onConfirm={() => handleDeleteCredential(selectedAccount.id, cred.id)}
+                                  title="Delete Credential?"
+                                  description={`Are you sure you want to delete the credential "${cred.name}"?`}
+                                >
+                                  <Button variant="ghost" size="icon">
+                                    <Trash2 className="h-4 w-4 text-muted-foreground" />
+                                  </Button>
+                                </ConfirmDeleteDialog>
                               </div>
                             </div>
                           ))}
@@ -280,9 +311,15 @@ export function AppDetails({ app, onUpdate, onDelete }: AppDetailsProps) {
                                   )}
                                 </div>
                               </div>
-                              <Button variant="ghost" size="icon" className="shrink-0" onClick={() => handleDeleteContext(selectedAccount.id, ctx.id)}>
-                                <Trash2 className="h-4 w-4 text-muted-foreground" />
-                              </Button>
+                              <ConfirmDeleteDialog
+                                onConfirm={() => handleDeleteContext(selectedAccount.id, ctx.id)}
+                                title="Delete Context?"
+                                description={`Are you sure you want to delete the context "${ctx.title}"?`}
+                              >
+                                <Button variant="ghost" size="icon" className="shrink-0">
+                                  <Trash2 className="h-4 w-4 text-muted-foreground" />
+                                </Button>
+                              </ConfirmDeleteDialog>
                             </div>
                           ))}
                         </div>

@@ -33,6 +33,7 @@ export function AddAccountModal({ onAdd }: AddAccountModalProps) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const [authMethod, setAuthMethod] = useState<AuthMethod>('email');
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -44,6 +45,7 @@ export function AddAccountModal({ onAdd }: AddAccountModalProps) {
       name: name.trim(),
       email: email.trim(),
       username: username.trim(),
+      password: password,
       authMethod,
       credentials: [],
       contexts: [],
@@ -55,6 +57,7 @@ export function AddAccountModal({ onAdd }: AddAccountModalProps) {
     setName('');
     setEmail('');
     setUsername('');
+    setPassword('');
     setAuthMethod('email');
   };
 
@@ -119,6 +122,16 @@ export function AddAccountModal({ onAdd }: AddAccountModalProps) {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 placeholder="@username"
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="password">Password (Optional)</Label>
+              <Input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••"
               />
             </div>
           </div>
