@@ -150,14 +150,14 @@ export function AppDetails({ app, onUpdate, onDelete }: AppDetailsProps) {
               <button
                 key={account.id}
                 onClick={() => setSelectedAccountId(account.id)}
-                className={`w-full text-left px-4 py-3 rounded-lg transition-colors ${
+                className={`w-full text-left px-4 py-3 rounded-lg transition-all border ${
                   selectedAccountId === account.id
-                    ? 'bg-primary text-primary-foreground'
-                    : 'hover:bg-muted'
+                    ? 'bg-blue-500/10 text-blue-700 border-blue-200 dark:bg-blue-500/20 dark:text-blue-300 dark:border-blue-500/30 shadow-sm'
+                    : 'border-transparent hover:bg-muted'
                 }`}
               >
                 <div className="font-medium">{account.name}</div>
-                <div className={`text-xs mt-1 ${selectedAccountId === account.id ? 'text-primary-foreground/80' : 'text-muted-foreground'}`}>
+                <div className={`text-xs mt-1 ${selectedAccountId === account.id ? 'text-blue-600/80 dark:text-blue-300/80' : 'text-muted-foreground'}`}>
                   {account.authMethod}
                 </div>
               </button>
