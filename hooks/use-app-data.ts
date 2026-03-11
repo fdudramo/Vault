@@ -17,7 +17,6 @@ export function useAppData() {
         console.error('Failed to parse stored apps', e);
       }
     }
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsLoaded(true);
   }, []);
 

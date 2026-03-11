@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAppData } from '@/hooks/use-app-data';
 import { Sidebar } from '@/components/sidebar';
 import { AppDetails } from '@/components/app-details';
@@ -12,6 +12,21 @@ export default function Home() {
   const { apps, isLoaded, addApp, updateApp, deleteApp } = useAppData();
   const [selectedAppId, setSelectedAppId] = useState<string | null>('home');
   const [jumpToAccountId, setJumpToAccountId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const down = (e: KeyboardEvent) => {
+      if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        setSelectedAppId('home');
+        setTimeout(() => {
+          document.getElementById('global-search')?.focus();
+        }, 100);
+      }
+    }
+
+    document.addEventListener("keydown", down);
+    return () => document.removeEventListener("keydown", down);
+  }, []);
 
   if (!isLoaded) {
     return (

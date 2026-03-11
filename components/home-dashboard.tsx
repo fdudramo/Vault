@@ -65,6 +65,7 @@ export function HomeDashboard({ apps, onSelectApp, onAddApp }: HomeDashboardProp
       <div className="relative group">
         <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
         <Input 
+          id="global-search"
           placeholder="Search anything (apps, accounts, emails, passwords, notes)..." 
           className="pl-12 py-6 text-lg bg-muted/50 border-muted-foreground/20 focus-visible:ring-primary/50 rounded-xl shadow-sm"
           value={searchQuery}

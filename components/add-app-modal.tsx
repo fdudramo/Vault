@@ -21,9 +21,12 @@ import { toast } from 'sonner';
 
 interface AddAppModalProps {
   onAdd: (app: AppItem) => void;
+  isCollapsed?: boolean;
+  className?: string;
+  variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link";
 }
 
-export function AddAppModal({ onAdd }: AddAppModalProps) {
+export function AddAppModal({ onAdd, isCollapsed, className, variant = "outline" }: AddAppModalProps) {
   const [open, setOpen] = useState(false);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -53,9 +56,13 @@ export function AddAppModal({ onAdd }: AddAppModalProps) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="w-full justify-start gap-2" variant="outline">
-          <Plus className="h-4 w-4" />
-          Add New App
+        <Button 
+          className={className || "w-full justify-start gap-2"} 
+          variant={variant}
+          size={isCollapsed ? "icon" : "default"}
+        >
+          <Plus className={isCollapsed ? "h-5 w-5" : "h-4 w-4"} />
+          {!isCollapsed && "Add New App"}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">

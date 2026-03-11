@@ -35,24 +35,19 @@ export function AppDetails({ app, onUpdate, onDelete, jumpToAccountId, clearJump
       if (selectedAccountId !== jumpToAccountId) {
         // eslint-disable-next-line react-hooks/set-state-in-effect
         setSelectedAccountId(jumpToAccountId);
-        // eslint-disable-next-line react-hooks/set-state-in-effect
         setSelectionHistory(prev => ({ ...prev, [app.id]: jumpToAccountId }));
       }
       if (clearJumpToAccountId) {
         clearJumpToAccountId();
       }
     } else if (app.id !== currentAppId) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setCurrentAppId(app.id);
       const historyId = selectionHistory[app.id];
       if (historyId && app.accounts.some(a => a.id === historyId)) {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
         setSelectedAccountId(historyId);
       } else if (app.accounts.length > 0) {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
         setSelectedAccountId(app.accounts[0].id);
       } else {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
         setSelectedAccountId(null);
       }
     }
