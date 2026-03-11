@@ -5,13 +5,14 @@ import { useAppData } from '@/hooks/use-app-data';
 import { Sidebar } from '@/components/sidebar';
 import { AppDetails } from '@/components/app-details';
 import { HomeDashboard } from '@/components/home-dashboard';
-import { LayoutGrid } from 'lucide-react';
+import { LayoutGrid, Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export default function Home() {
   const { apps, isLoaded, addApp, updateApp, deleteApp } = useAppData();
   const [selectedAppId, setSelectedAppId] = useState<string | null>('home');
   const [jumpToAccountId, setJumpToAccountId] = useState<string | null>(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -42,19 +43,36 @@ export default function Home() {
   const selectedApp = apps.find(a => a.id === selectedAppId);
 
   return (
-    <div className="flex h-screen overflow-hidden bg-background">
+    <div className="flex h-screen overflow-hidden bg-background relative">
       <Sidebar 
         apps={apps} 
         selectedAppId={selectedAppId} 
-        onSelectApp={setSelectedAppId} 
+        onSelectApp={(id) => {
+          setSelectedAppId(id);
+          setIsMobileMenuOpen(false);
+        }} 
         onAddApp={(app) => {
           addApp(app);
           setSelectedAppId(app.id);
+          setIsMobileMenuOpen(false);
         }} 
+        isMobileOpen={isMobileMenuOpen}
+        onMobileClose={() => setIsMobileMenuOpen(false)}
       />
       
-      <main className="flex-1 overflow-y-auto p-8">
-        <div className="max-w-5xl mx-auto h-full">
+      <main className="flex-1 overflow-y-auto">
+        {/* Mobile Header */}
+        <div className="lg:hidden flex items-center justify-between p-4 border-b bg-card/50 sticky top-0 z-10 backdrop-blur-md">
+          <div className="flex items-center gap-2 font-semibold text-lg text-primary">
+            <LayoutGrid className="h-5 w-5" />
+            <span>Vault</span>
+          </div>
+          <Button variant="ghost" size="icon" onClick={() => setIsMobileMenuOpen(true)}>
+            <Menu className="h-6 w-6" />
+          </Button>
+        </div>
+
+        <div className="p-4 md:p-8 max-w-5xl mx-auto h-full">
           {selectedAppId === 'home' || selectedAppId === null ? (
             <HomeDashboard 
               apps={apps} 

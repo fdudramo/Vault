@@ -144,23 +144,23 @@ export function AppDetails({ app, onUpdate, onDelete, jumpToAccountId, clearJump
   const selectedAccount = app.accounts.find(a => a.id === selectedAccountId);
 
   return (
-    <div className="flex flex-col h-full space-y-6">
-      <div className="flex items-start justify-between">
+    <div className="flex flex-col h-full space-y-4 md:space-y-6">
+      <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight">{app.name}</h2>
+          <h2 className="text-2xl md:text-3xl font-bold tracking-tight">{app.name}</h2>
           {app.url && (
             <a
               href={app.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-muted-foreground hover:text-primary flex items-center gap-1 mt-1 text-sm"
+              className="text-muted-foreground hover:text-primary flex items-center gap-1 mt-1 text-xs md:text-sm break-all"
             >
-              <ExternalLink className="h-3 w-3" />
+              <ExternalLink className="h-3 w-3 shrink-0" />
               {app.url}
             </a>
           )}
           {app.description && (
-            <p className="text-muted-foreground mt-2">{app.description}</p>
+            <p className="text-muted-foreground mt-2 text-sm md:text-base">{app.description}</p>
           )}
         </div>
         <ConfirmDeleteDialog 
@@ -171,7 +171,7 @@ export function AppDetails({ app, onUpdate, onDelete, jumpToAccountId, clearJump
           title="Delete App?"
           description={`Are you sure you want to delete "${app.name}"? This will permanently delete all associated accounts, credentials, and context.`}
         >
-          <Button variant="destructive" size="sm">
+          <Button variant="destructive" size="sm" className="w-full md:w-auto">
             <Trash2 className="h-4 w-4 mr-2" />
             Delete App
           </Button>
@@ -179,7 +179,7 @@ export function AppDetails({ app, onUpdate, onDelete, jumpToAccountId, clearJump
       </div>
 
       <div className="flex items-center justify-between border-b pb-4">
-        <h3 className="text-xl font-semibold">Accounts</h3>
+        <h3 className="text-lg md:text-xl font-semibold">Accounts</h3>
         <AddAccountModal onAdd={handleAddAccount} />
       </div>
 
@@ -193,21 +193,21 @@ export function AppDetails({ app, onUpdate, onDelete, jumpToAccountId, clearJump
           <AddAccountModal onAdd={handleAddAccount} />
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          {/* Account List Sidebar */}
-          <div className="md:col-span-1 space-y-2">
+        <div className="flex flex-col md:grid md:grid-cols-4 gap-6">
+          {/* Account List - Horizontal scroll on mobile, vertical on desktop */}
+          <div className="flex md:flex-col gap-2 overflow-x-auto md:overflow-x-visible pb-2 md:pb-0 md:col-span-1 no-scrollbar">
             {app.accounts.map((account) => (
               <button
                 key={account.id}
                 onClick={() => handleSelectAccount(account.id)}
-                className={`w-full text-left px-4 py-3 rounded-lg transition-all border ${
+                className={`flex-shrink-0 md:w-full text-left px-4 py-3 rounded-lg transition-all border whitespace-nowrap md:whitespace-normal ${
                   selectedAccountId === account.id
                     ? 'bg-blue-500/10 text-blue-700 border-blue-200 dark:bg-blue-500/20 dark:text-blue-300 dark:border-blue-500/30 shadow-sm'
                     : 'border-transparent hover:bg-muted'
                 }`}
               >
-                <div className="font-medium">{account.name}</div>
-                <div className={`text-xs mt-1 ${selectedAccountId === account.id ? 'text-blue-600/80 dark:text-blue-300/80' : 'text-muted-foreground'}`}>
+                <div className="font-medium text-sm md:text-base">{account.name}</div>
+                <div className={`text-[10px] md:text-xs mt-1 ${selectedAccountId === account.id ? 'text-blue-600/80 dark:text-blue-300/80' : 'text-muted-foreground'}`}>
                   {account.authMethod}
                 </div>
               </button>
@@ -217,36 +217,36 @@ export function AppDetails({ app, onUpdate, onDelete, jumpToAccountId, clearJump
           {/* Account Details */}
           <div className="md:col-span-3">
             {selectedAccount && (
-              <Card className="glass-card border-border/50 shadow-sm">
-                <CardHeader className="pb-4">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <CardTitle className="text-2xl flex items-center gap-2">
-                        {selectedAccount.name}
-                        <Badge variant="secondary" className="capitalize text-xs font-normal">
+              <Card className="glass-card border-border/50 shadow-sm overflow-hidden">
+                <CardHeader className="p-4 md:p-6 pb-4">
+                  <div className="flex justify-between items-start gap-4">
+                    <div className="min-w-0 flex-1">
+                      <CardTitle className="text-xl md:text-2xl flex items-center gap-2 flex-wrap">
+                        <span className="truncate">{selectedAccount.name}</span>
+                        <Badge variant="secondary" className="capitalize text-[10px] font-normal shrink-0">
                           {selectedAccount.authMethod}
                         </Badge>
                       </CardTitle>
-                      <CardDescription className="mt-2 space-y-1">
+                      <CardDescription className="mt-2 space-y-2">
                         {selectedAccount.email && (
-                          <div className="flex items-center gap-2">
-                            <span className="font-medium text-foreground">Email:</span>
-                            <span>{selectedAccount.email}</span>
-                            <CopyButton textToCopy={selectedAccount.email} variant="ghost" size="icon" className="h-5 w-5" iconClassName="h-3 w-3" />
+                          <div className="flex items-center gap-2 text-xs md:text-sm">
+                            <span className="font-medium text-foreground shrink-0">Email:</span>
+                            <span className="truncate">{selectedAccount.email}</span>
+                            <CopyButton textToCopy={selectedAccount.email} variant="ghost" size="icon" className="h-6 w-6 shrink-0" iconClassName="h-3 w-3" />
                           </div>
                         )}
                         {selectedAccount.username && (
-                          <div className="flex items-center gap-2">
-                            <span className="font-medium text-foreground">Username:</span>
-                            <span>{selectedAccount.username}</span>
-                            <CopyButton textToCopy={selectedAccount.username} variant="ghost" size="icon" className="h-5 w-5" iconClassName="h-3 w-3" />
+                          <div className="flex items-center gap-2 text-xs md:text-sm">
+                            <span className="font-medium text-foreground shrink-0">User:</span>
+                            <span className="truncate">{selectedAccount.username}</span>
+                            <CopyButton textToCopy={selectedAccount.username} variant="ghost" size="icon" className="h-6 w-6 shrink-0" iconClassName="h-3 w-3" />
                           </div>
                         )}
                         {selectedAccount.password && (
-                          <div className="flex items-center gap-2">
-                            <span className="font-medium text-foreground">Password:</span>
+                          <div className="flex items-center gap-2 text-xs md:text-sm">
+                            <span className="font-medium text-foreground shrink-0">Pass:</span>
                             <span className="font-mono tracking-widest">••••••••</span>
-                            <CopyButton textToCopy={selectedAccount.password} variant="ghost" size="icon" className="h-5 w-5" iconClassName="h-3 w-3" />
+                            <CopyButton textToCopy={selectedAccount.password} variant="ghost" size="icon" className="h-6 w-6 shrink-0" iconClassName="h-3 w-3" />
                           </div>
                         )}
                       </CardDescription>
@@ -256,55 +256,53 @@ export function AppDetails({ app, onUpdate, onDelete, jumpToAccountId, clearJump
                       title="Delete Account?"
                       description={`Are you sure you want to delete the account "${selectedAccount.name}"? This will permanently delete all associated credentials and context.`}
                     >
-                      <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive hover:bg-destructive/10">
+                      <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive hover:bg-destructive/10 shrink-0">
                         <Trash2 className="h-4 w-4" />
                       </Button>
                     </ConfirmDeleteDialog>
                   </div>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="p-4 md:p-6 pt-0">
                   <Tabs defaultValue="credentials" className="w-full">
                     <TabsList className="grid w-full grid-cols-2 mb-4">
-                      <TabsTrigger value="credentials">Credentials</TabsTrigger>
-                      <TabsTrigger value="context">Context & Links</TabsTrigger>
+                      <TabsTrigger value="credentials" className="text-xs md:text-sm">Credentials</TabsTrigger>
+                      <TabsTrigger value="context" className="text-xs md:text-sm">Context</TabsTrigger>
                     </TabsList>
                     
                     <TabsContent value="credentials" className="space-y-4">
                       <div className="flex justify-between items-center">
-                        <h4 className="text-sm font-medium">API Keys & Tokens</h4>
+                        <h4 className="text-sm font-medium">API Keys</h4>
                         <AddCredentialModal onAdd={(cred) => handleAddCredential(selectedAccount.id, cred)} />
                       </div>
                       
                       {selectedAccount.credentials.length === 0 ? (
-                        <div className="text-center py-6 text-sm text-muted-foreground border rounded-md border-dashed">
-                          No credentials stored for this account.
+                        <div className="text-center py-6 text-xs text-muted-foreground border rounded-md border-dashed">
+                          No credentials stored.
                         </div>
                       ) : (
-                        <div className="space-y-3">
+                        <div className="space-y-2">
                           {selectedAccount.credentials.map((cred) => (
-                            <div key={cred.id} className="flex items-center justify-between p-3 border rounded-md bg-background/50">
-                              <div className="flex items-center gap-3 overflow-hidden">
-                                <div className="p-2 bg-primary/10 rounded-md text-primary shrink-0">
-                                  <Key className="h-4 w-4" />
+                            <div key={cred.id} className="flex items-center justify-between p-2 md:p-3 border rounded-md bg-background/50 gap-2">
+                              <div className="flex items-center gap-2 md:gap-3 overflow-hidden min-w-0">
+                                <div className="p-1.5 md:p-2 bg-primary/10 rounded-md text-primary shrink-0">
+                                  <Key className="h-3 w-3 md:h-4 w-4" />
                                 </div>
                                 <div className="overflow-hidden">
-                                  <div className="font-medium text-sm truncate">{cred.name}</div>
-                                  <div className="text-xs text-muted-foreground flex items-center gap-2">
+                                  <div className="font-medium text-xs md:text-sm truncate">{cred.name}</div>
+                                  <div className="text-[10px] text-muted-foreground flex items-center gap-1 md:gap-2">
                                     <span className="uppercase">{cred.type}</span>
-                                    <span>•</span>
-                                    <span>{format(cred.createdAt, 'MMM d, yyyy')}</span>
                                   </div>
                                 </div>
                               </div>
-                              <div className="flex items-center gap-2 shrink-0">
-                                <CopyButton textToCopy={cred.value} variant="secondary" size="sm" showText />
+                              <div className="flex items-center gap-1 shrink-0">
+                                <CopyButton textToCopy={cred.value} variant="secondary" size="sm" className="h-7 md:h-8" />
                                 <ConfirmDeleteDialog
                                   onConfirm={() => handleDeleteCredential(selectedAccount.id, cred.id)}
                                   title="Delete Credential?"
                                   description={`Are you sure you want to delete the credential "${cred.name}"?`}
                                 >
-                                  <Button variant="ghost" size="icon">
-                                    <Trash2 className="h-4 w-4 text-muted-foreground" />
+                                  <Button variant="ghost" size="icon" className="h-7 w-7 md:h-8 md:w-8">
+                                    <Trash2 className="h-3.5 w-3.5 text-muted-foreground" />
                                   </Button>
                                 </ConfirmDeleteDialog>
                               </div>
@@ -316,28 +314,28 @@ export function AppDetails({ app, onUpdate, onDelete, jumpToAccountId, clearJump
                     
                     <TabsContent value="context" className="space-y-4">
                       <div className="flex justify-between items-center">
-                        <h4 className="text-sm font-medium">URLs, Chats & Notes</h4>
+                        <h4 className="text-sm font-medium">Context</h4>
                         <AddContextModal onAdd={(ctx) => handleAddContext(selectedAccount.id, ctx)} />
                       </div>
                       
                       {selectedAccount.contexts.length === 0 ? (
-                        <div className="text-center py-6 text-sm text-muted-foreground border rounded-md border-dashed">
-                          No context stored for this account.
+                        <div className="text-center py-6 text-xs text-muted-foreground border rounded-md border-dashed">
+                          No context stored.
                         </div>
                       ) : (
-                        <div className="space-y-3">
+                        <div className="space-y-2">
                           {selectedAccount.contexts.map((ctx) => (
-                            <div key={ctx.id} className="flex items-start justify-between p-3 border rounded-md bg-background/50">
-                              <div className="flex items-start gap-3 overflow-hidden">
-                                <div className="p-2 bg-primary/10 rounded-md text-primary shrink-0 mt-0.5">
-                                  {ctx.type === 'chat' ? <MessageSquare className="h-4 w-4" /> : <LinkIcon className="h-4 w-4" />}
+                            <div key={ctx.id} className="flex items-start justify-between p-2 md:p-3 border rounded-md bg-background/50 gap-2">
+                              <div className="flex items-start gap-2 md:gap-3 overflow-hidden min-w-0">
+                                <div className="p-1.5 md:p-2 bg-primary/10 rounded-md text-primary shrink-0 mt-0.5">
+                                  {ctx.type === 'chat' ? <MessageSquare className="h-3 w-3 md:h-4 w-4" /> : <LinkIcon className="h-3 w-3 md:h-4 w-4" />}
                                 </div>
                                 <div className="overflow-hidden">
-                                  <div className="font-medium text-sm truncate">{ctx.title}</div>
+                                  <div className="font-medium text-xs md:text-sm truncate">{ctx.title}</div>
                                   {ctx.type === 'note' ? (
-                                    <p className="text-sm text-muted-foreground mt-1 whitespace-pre-wrap">{ctx.content}</p>
+                                    <p className="text-xs text-muted-foreground mt-1 whitespace-pre-wrap line-clamp-3">{ctx.content}</p>
                                   ) : (
-                                    <a href={ctx.content} target="_blank" rel="noopener noreferrer" className="text-sm text-primary hover:underline truncate block mt-1">
+                                    <a href={ctx.content} target="_blank" rel="noopener noreferrer" className="text-xs text-primary hover:underline truncate block mt-1">
                                       {ctx.content}
                                     </a>
                                   )}
@@ -348,8 +346,8 @@ export function AppDetails({ app, onUpdate, onDelete, jumpToAccountId, clearJump
                                 title="Delete Context?"
                                 description={`Are you sure you want to delete the context "${ctx.title}"?`}
                               >
-                                <Button variant="ghost" size="icon" className="shrink-0">
-                                  <Trash2 className="h-4 w-4 text-muted-foreground" />
+                                <Button variant="ghost" size="icon" className="shrink-0 h-7 w-7 md:h-8 md:w-8">
+                                  <Trash2 className="h-3.5 w-3.5 text-muted-foreground" />
                                 </Button>
                               </ConfirmDeleteDialog>
                             </div>

@@ -5,7 +5,7 @@ import { AppItem } from '@/types';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { AddAppModal } from './add-app-modal';
-import { LayoutGrid, Menu, Search } from 'lucide-react';
+import { LayoutGrid, Menu, Search, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
@@ -14,16 +14,28 @@ interface SidebarProps {
   selectedAppId: string | null;
   onSelectApp: (id: string) => void;
   onAddApp: (app: AppItem) => void;
+  isMobileOpen?: boolean;
+  onMobileClose?: () => void;
 }
 
-export function Sidebar({ apps, selectedAppId, onSelectApp, onAddApp }: SidebarProps) {
+export function Sidebar({ apps, selectedAppId, onSelectApp, onAddApp, isMobileOpen, onMobileClose }: SidebarProps) {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   return (
     <TooltipProvider delay={500}>
+      {/* Mobile Overlay */}
+      {isMobileOpen && (
+        <div 
+          className="fixed inset-0 bg-background/80 backdrop-blur-sm z-40 lg:hidden"
+          onClick={onMobileClose}
+        />
+      )}
+
       <div 
         className={cn(
-          "flex flex-col h-screen border-r bg-card/50 transition-all duration-300 ease-in-out",
+          "flex flex-col h-screen border-r bg-card/50 transition-all duration-300 ease-in-out z-50",
+          "fixed inset-y-0 left-0 lg:relative lg:translate-x-0",
+          isMobileOpen ? "translate-x-0" : "-translate-x-full",
           isCollapsed ? "w-[72px]" : "w-64"
         )}
       >
@@ -38,9 +50,15 @@ export function Sidebar({ apps, selectedAppId, onSelectApp, onAddApp }: SidebarP
             variant="ghost" 
             size="icon" 
             className="shrink-0 rounded-lg hover:bg-muted"
-            onClick={() => setIsCollapsed(!isCollapsed)}
+            onClick={() => {
+              if (onMobileClose && isMobileOpen) {
+                onMobileClose();
+              } else {
+                setIsCollapsed(!isCollapsed);
+              }
+            }}
           >
-            <Menu className="h-5 w-5" />
+            {isMobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </Button>
         </div>
         
