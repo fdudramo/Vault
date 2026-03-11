@@ -19,16 +19,26 @@ interface AppDetailsProps {
   app: AppItem;
   onUpdate: (app: AppItem) => void;
   onDelete: (id: string) => void;
+  jumpToAccountId?: string | null;
+  clearJumpToAccountId?: () => void;
 }
 
-export function AppDetails({ app, onUpdate, onDelete }: AppDetailsProps) {
+export function AppDetails({ app, onUpdate, onDelete, jumpToAccountId, clearJumpToAccountId }: AppDetailsProps) {
   const [selectionHistory, setSelectionHistory] = useState<Record<string, string>>({});
   const [currentAppId, setCurrentAppId] = useState(app.id);
   const [selectedAccountId, setSelectedAccountId] = useState<string | null>(
     app.accounts.length > 0 ? app.accounts[0].id : null
   );
 
-  if (app.id !== currentAppId) {
+  if (jumpToAccountId) {
+    if (selectedAccountId !== jumpToAccountId) {
+      setSelectedAccountId(jumpToAccountId);
+      setSelectionHistory(prev => ({ ...prev, [app.id]: jumpToAccountId }));
+    }
+    if (clearJumpToAccountId) {
+      clearJumpToAccountId();
+    }
+  } else if (app.id !== currentAppId) {
     setCurrentAppId(app.id);
     const historyId = selectionHistory[app.id];
     if (historyId && app.accounts.some(a => a.id === historyId)) {

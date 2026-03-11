@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button';
 export default function Home() {
   const { apps, isLoaded, addApp, updateApp, deleteApp } = useAppData();
   const [selectedAppId, setSelectedAppId] = useState<string | null>('home');
+  const [jumpToAccountId, setJumpToAccountId] = useState<string | null>(null);
 
   if (!isLoaded) {
     return (
@@ -42,7 +43,10 @@ export default function Home() {
           {selectedAppId === 'home' || selectedAppId === null ? (
             <HomeDashboard 
               apps={apps} 
-              onSelectApp={setSelectedAppId} 
+              onSelectApp={(appId, accountId) => {
+                setSelectedAppId(appId);
+                if (accountId) setJumpToAccountId(accountId);
+              }} 
               onAddApp={(app) => {
                 addApp(app);
                 setSelectedAppId(app.id);
@@ -56,6 +60,8 @@ export default function Home() {
                 deleteApp(id);
                 setSelectedAppId('home');
               }} 
+              jumpToAccountId={jumpToAccountId}
+              clearJumpToAccountId={() => setJumpToAccountId(null)}
             />
           ) : (
             <div className="flex flex-col items-center justify-center h-full text-center">
