@@ -1,8 +1,15 @@
-"use client"
+"use client";
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Database, Copy, CheckCircle2, Shield, HardDrive, Lock } from "lucide-react";
+import {
+  Database,
+  Copy,
+  CheckCircle2,
+  Shield,
+  HardDrive,
+  Lock,
+} from "lucide-react";
 import { motion } from "motion/react";
 
 export default function LandingPage() {
@@ -19,7 +26,10 @@ export default function LandingPage() {
           </div>
           <div className="flex items-center gap-4">
             <Link href="/app">
-              <Button variant="ghost" className="text-muted-foreground hover:text-foreground">
+              <Button
+                variant="ghost"
+                className="text-muted-foreground hover:text-foreground"
+              >
                 Sign In
               </Button>
             </Link>
@@ -37,48 +47,85 @@ export default function LandingPage() {
         <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden">
           <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
           <div className="absolute left-0 right-0 top-0 -z-10 m-auto h-[310px] w-[310px] rounded-full bg-blue-500 opacity-20 blur-[100px]"></div>
-          
+
           <div className="container mx-auto px-4 relative z-10 flex flex-col items-center text-center">
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
               className="inline-flex items-center rounded-full border border-blue-500/30 bg-blue-500/10 px-3 py-1 text-sm font-medium text-blue-400 mb-8"
             >
               <span className="flex size-2 rounded-full bg-blue-500 mr-2 animate-pulse"></span>
-              the vault u r looking for
+              the vault you've been looking for
             </motion.div>
-            
-            <motion.h1 
+
+            <motion.h1
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.1 }}
               className="text-5xl md:text-7xl font-bold tracking-tighter max-w-4xl mb-6 leading-[1.1]"
             >
-              bring your db to<br className="hidden md:block" />
+              Bring your own DB
+              <br className="hidden md:block" />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-600">
-                your vault
+                to your vault
               </span>
             </motion.h1>
-            
-            <motion.p 
+
+            <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
               className="text-lg md:text-xl text-muted-foreground max-w-2xl mb-10 text-left"
             >
-              i have different accounts for different apps. each app i signed into using different accounts that represent different things for me and i use them for different purposes. in each account i may have generated some tokens, api keys, had different chats and urls for things i did in there. i always forget which one is for what.
-              <br /><br />
-              so i built this vault to keep everything organized. now i know exactly what i have where.
+              <div className="space-y-4 text-left">
+                <p className="text-muted-foreground">
+                  Yesterday I lost 20 minutes trying to find the right API
+                  token.
+                </p>
+
+                <ul className="list-none space-y-1 text-muted-foreground">
+                  <li>• Wrong account.</li>
+                  <li>• Wrong project.</li>
+                  <li>• Wrong tab.</li>
+                </ul>
+
+                <p className="text-muted-foreground">
+                  Like most developers, I have multiple accounts for everything:
+                  different apps, different tokens, different environments.
+                </p>
+
+                <p className="text-muted-foreground">
+                  Each account has its own API keys, chats, URLs, and configs.
+                  And I constantly forget which account owns what.
+                </p>
+
+                <p className="text-muted-foreground">
+                  So I built a small vault.
+                </p>
+
+                <p className="text-muted-foreground">
+                  Now every app has its own vault where I store: accounts, API
+                  keys, tokens, and context.
+                </p>
+
+                <p className="text-muted-foreground">
+                  When I need something, I open the vault, copy it, and move on.
+                  No digging through settings. No guessing which account it was.
+                </p>
+              </div>
             </motion.p>
-            
-            <motion.div 
+
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.3 }}
             >
               <Link href="/app">
-                <Button size="lg" className="bg-blue-500 text-white hover:bg-blue-600 font-medium w-full sm:w-auto px-8 h-12 text-base">
+                <Button
+                  size="lg"
+                  className="bg-blue-500 text-white hover:bg-blue-600 font-medium w-full sm:w-auto px-8 h-12 text-base"
+                >
                   get your own vault, free.
                 </Button>
               </Link>
@@ -90,32 +137,42 @@ export default function LandingPage() {
         <section className="py-24 border-t border-white/5 bg-black/50">
           <div className="container mx-auto px-4">
             <div className="mb-16 max-w-3xl">
-              <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">what u get</h2>
+              <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">
+                what u get
+              </h2>
             </div>
-            
+
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {[
                 {
                   icon: <Database className="size-5 text-blue-400" />,
                   title: "one vault per app",
-                  description: "keep each app's accounts, tokens, api keys, and context all in one place."
+                  description:
+                    "keep each app's accounts, tokens, api keys, and context all in one place.",
                 },
                 {
                   icon: <Copy className="size-5 text-blue-400" />,
                   title: "copy fast",
-                  description: "one click to copy any token or key. no more digging through settings."
+                  description:
+                    "one click to copy any token or key. no more digging through settings.",
                 },
                 {
                   icon: <CheckCircle2 className="size-5 text-blue-400" />,
                   title: "its free",
-                  description: "local storage is free. supabase sync is $1/month. thats it."
-                }
+                  description:
+                    "local storage is free. supabase sync is $1/month. thats it.",
+                },
               ].map((feature, i) => (
-                <div key={i} className="p-6 rounded-2xl border border-white/5 bg-white/[0.02] hover:bg-white/[0.04] transition-colors">
+                <div
+                  key={i}
+                  className="p-6 rounded-2xl border border-white/5 bg-white/[0.02] hover:bg-white/[0.04] transition-colors"
+                >
                   <div className="size-10 rounded-lg bg-blue-500/10 flex items-center justify-center border border-blue-500/20 mb-4">
                     {feature.icon}
                   </div>
-                  <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
+                  <h3 className="text-xl font-semibold mb-2">
+                    {feature.title}
+                  </h3>
                   <p className="text-muted-foreground leading-relaxed">
                     {feature.description}
                   </p>
@@ -129,7 +186,9 @@ export default function LandingPage() {
         <section className="py-16 md:py-32">
           <div className="mx-auto max-w-5xl px-6">
             <div className="mx-auto max-w-2xl space-y-6 text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold tracking-tight">plans & pricing</h2>
+              <h2 className="text-3xl md:text-4xl font-bold tracking-tight">
+                plans & pricing
+              </h2>
               <p className="text-muted-foreground text-lg">
                 secure your accounts exactly how you want.
               </p>
@@ -140,12 +199,21 @@ export default function LandingPage() {
                 <div className="space-y-4">
                   <div>
                     <h2 className="font-medium">Free Plan</h2>
-                    <span className="my-3 block text-2xl font-semibold">$0 / forever</span>
-                    <p className="text-muted-foreground text-sm">Perfect for simple local storage.</p>
+                    <span className="my-3 block text-2xl font-semibold">
+                      $0 / forever
+                    </span>
+                    <p className="text-muted-foreground text-sm">
+                      Perfect for simple local storage.
+                    </p>
                   </div>
 
                   <Link href="/app">
-                    <Button variant="outline" className="w-full border-white/10 hover:border-white/20">Get Started</Button>
+                    <Button
+                      variant="outline"
+                      className="w-full border-white/10 hover:border-white/20"
+                    >
+                      Get Started
+                    </Button>
                   </Link>
 
                   <hr className="border-dashed border-white/10" />
@@ -162,7 +230,8 @@ export default function LandingPage() {
                       </li>
                     ))}
                     <li className="text-muted-foreground text-sm italic">
-                      Note: If you clear your browser storage, cache, or update, your data will be gone!
+                      Note: If you clear your browser storage, cache, or update,
+                      your data will be gone!
                     </li>
                   </ul>
                 </div>
@@ -176,20 +245,28 @@ export default function LandingPage() {
                         RECOMMENDED
                       </div>
                       <h2 className="font-medium text-blue-400">Pro Plan</h2>
-                      <span className="my-3 block text-2xl font-semibold">$1 / mo</span>
-                      <p className="text-muted-foreground text-sm">billed annually</p>
+                      <span className="my-3 block text-2xl font-semibold">
+                        $1 / mo
+                      </span>
+                      <p className="text-muted-foreground text-sm">
+                        billed annually
+                      </p>
                     </div>
 
-                    <Button 
+                    <Button
                       className="w-full bg-blue-500 text-white hover:bg-blue-600"
-                      onClick={() => window.open('https://t.me/OmarGatara', '_blank')}
+                      onClick={() =>
+                        window.open("https://t.me/OmarGatara", "_blank")
+                      }
                     >
                       Talk to me
                     </Button>
                   </div>
 
                   <div>
-                    <div className="text-sm font-medium">Everything in free plus:</div>
+                    <div className="text-sm font-medium">
+                      Everything in free plus:
+                    </div>
 
                     <ul className="mt-4 list-outside space-y-3 text-sm">
                       {[
@@ -203,7 +280,8 @@ export default function LandingPage() {
                         </li>
                       ))}
                       <li className="text-muted-foreground text-sm italic">
-                        Note: If you clear browser storage, you just need to re-authenticate your Supabase. Your data is safe!
+                        Note: If you clear browser storage, you just need to
+                        re-authenticate your Supabase. Your data is safe!
                       </li>
                     </ul>
                   </div>
