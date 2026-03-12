@@ -11,6 +11,7 @@ import { LayoutGrid, Menu, Search, X, LogOut } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useAuth } from '@/hooks/use-auth';
+import Link from 'next/link';
 
 interface SidebarProps {
   apps: AppItem[];
@@ -45,10 +46,15 @@ export function Sidebar({ apps, selectedAppId, onSelectApp, onAddApp, isMobileOp
       >
         <div className={cn("p-4 flex items-center h-16", isCollapsed ? "justify-center" : "justify-between")}>
           {!isCollapsed && (
-            <div className="flex items-center gap-2 font-semibold text-xl text-primary truncate">
+            <Link href="/" className="flex items-center gap-2 font-semibold text-xl text-primary truncate hover:opacity-80 transition-opacity">
               <LayoutGrid className="h-6 w-6 shrink-0" />
               <span>Vault</span>
-            </div>
+            </Link>
+          )}
+          {isCollapsed && (
+            <Link href="/" className="flex items-center justify-center hover:opacity-80 transition-opacity mr-2">
+              <LayoutGrid className="h-6 w-6 shrink-0 text-primary" />
+            </Link>
           )}
           <Button 
             variant="ghost" 
