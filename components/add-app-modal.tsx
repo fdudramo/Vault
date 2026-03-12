@@ -24,9 +24,10 @@ interface AddAppModalProps {
   isCollapsed?: boolean;
   className?: string;
   variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link";
+  renderTrigger?: React.ReactNode;
 }
 
-export function AddAppModal({ onAdd, isCollapsed, className, variant = "outline" }: AddAppModalProps) {
+export function AddAppModal({ onAdd, isCollapsed, className, variant = "outline", renderTrigger }: AddAppModalProps) {
   const [open, setOpen] = useState(false);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -56,14 +57,16 @@ export function AddAppModal({ onAdd, isCollapsed, className, variant = "outline"
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button 
-          className={className || "w-full justify-start gap-2"} 
-          variant={variant}
-          size={isCollapsed ? "icon" : "default"}
-        >
-          <Plus className={isCollapsed ? "h-5 w-5" : "h-4 w-4"} />
-          {!isCollapsed && "Add New App"}
-        </Button>
+        {renderTrigger || (
+          <Button 
+            className={className || "w-full justify-start gap-2"} 
+            variant={variant}
+            size={isCollapsed ? "icon" : "default"}
+          >
+            <Plus className={isCollapsed ? "h-5 w-5" : "h-4 w-4"} />
+            {!isCollapsed && "Add New App"}
+          </Button>
+        )}
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <form onSubmit={handleSubmit}>

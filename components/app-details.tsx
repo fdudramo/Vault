@@ -11,7 +11,7 @@ import { AddCredentialModal } from './add-credential-modal';
 import { AddContextModal } from './add-context-modal';
 import { ConfirmDeleteDialog } from './confirm-delete-dialog';
 import { CopyButton } from './copy-button';
-import { Copy, ExternalLink, Key, Link as LinkIcon, MessageSquare, Trash2, User } from 'lucide-react';
+import { Copy, ExternalLink, Key, Link as LinkIcon, MessageSquare, Trash2, User, Plus } from 'lucide-react';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
 
@@ -145,7 +145,8 @@ export function AppDetails({ app, onUpdate, onDelete, jumpToAccountId, clearJump
 
   return (
     <div className="flex flex-col h-full space-y-4 md:space-y-6">
-      <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
+      {/* Desktop Header - Hidden on Mobile */}
+      <div className="hidden lg:flex flex-col md:flex-row md:items-start justify-between gap-4 mb-6">
         <div>
           <h2 className="text-2xl md:text-3xl font-bold tracking-tight">{app.name}</h2>
           {app.url && (
@@ -180,7 +181,24 @@ export function AppDetails({ app, onUpdate, onDelete, jumpToAccountId, clearJump
 
       <div className="flex items-center justify-between border-b pb-4">
         <h3 className="text-lg md:text-xl font-semibold">Accounts</h3>
-        <AddAccountModal onAdd={handleAddAccount} />
+        <div className="flex items-center gap-2">
+          <AddAccountModal onAdd={handleAddAccount} />
+          {/* Mobile Delete Button - Hidden on Desktop */}
+          <div className="lg:hidden">
+            <ConfirmDeleteDialog 
+              onConfirm={() => {
+                onDelete(app.id);
+                toast.success('App deleted successfully');
+              }}
+              title="Delete App?"
+              description={`Are you sure you want to delete "${app.name}"? This will permanently delete all associated accounts, credentials, and context.`}
+            >
+              <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive hover:bg-destructive/10">
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            </ConfirmDeleteDialog>
+          </div>
+        </div>
       </div>
 
       {app.accounts.length === 0 ? (

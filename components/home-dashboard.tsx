@@ -2,25 +2,30 @@
 
 import { useState } from 'react';
 import { AppItem } from '@/types';
-import { Input } from '@/components/ui/input';
-import { Search, LayoutGrid, User, Key, MessageSquare, Link as LinkIcon, ArrowRight } from 'lucide-react';
-import { AddAppModal } from './add-app-modal';
+import { ArrowRight, LayoutGrid, User, Key, MessageSquare, Link as LinkIcon, Search } from 'lucide-react';
 import { CopyButton } from './copy-button';
+import { Input } from '@/components/ui/input';
+import { AddAppModal } from './add-app-modal';
 
 interface HomeDashboardProps {
   apps: AppItem[];
+  searchQuery: string;
+  onSearchChange: (query: string) => void;
   onSelectApp: (appId: string, accountId?: string) => void;
   onAddApp: (app: AppItem) => void;
 }
 
-export function HomeDashboard({ apps, onSelectApp, onAddApp }: HomeDashboardProps) {
-  const [searchQuery, setSearchQuery] = useState('');
+export function HomeDashboard({ apps, searchQuery, onSearchChange, onSelectApp, onAddApp }: HomeDashboardProps) {
+  const [localSearchQuery, setLocalSearchQuery] = useState('');
+  
+  // Use either the prop (mobile) or local state (desktop)
+  const effectiveSearchQuery = searchQuery || localSearchQuery;
 
   // Flatten everything for search
   const searchResults: any[] = [];
 
-  if (searchQuery) {
-    const query = searchQuery.toLowerCase();
+  if (effectiveSearchQuery) {
+    const query = effectiveSearchQuery.toLowerCase();
     
     apps.forEach(app => {
       // Check app match
@@ -55,27 +60,27 @@ export function HomeDashboard({ apps, onSelectApp, onAddApp }: HomeDashboardProp
 
   return (
     <div className="flex flex-col h-full space-y-4 md:space-y-6 max-w-4xl mx-auto px-1">
-      <div className="flex items-center justify-between">
+      <div className="hidden lg:flex items-center justify-between">
         <h2 className="text-2xl md:text-3xl font-bold tracking-tight">Vault Home</h2>
-        <div>
-          <AddAppModal onAdd={onAddApp} />
-        </div>
+        <AddAppModal onAdd={onAddApp} />
       </div>
 
-      <div className="relative group">
+      <div className="hidden lg:block relative group">
         <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 md:h-5 w-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
         <Input 
           id="global-search"
           placeholder="Search anything..." 
           className="pl-10 md:pl-12 py-5 md:py-6 text-base md:text-lg bg-muted/50 border-muted-foreground/20 focus-visible:ring-primary/50 rounded-xl shadow-sm"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          autoFocus
+          value={localSearchQuery}
+          onChange={(e) => {
+            setLocalSearchQuery(e.target.value);
+            onSearchChange(e.target.value);
+          }}
         />
       </div>
 
-      <div className="flex-1 overflow-y-auto pb-8 no-scrollbar">
-        {!searchQuery ? (
+      <div className="flex-1 overflow-y-auto pb-20 no-scrollbar">
+        {!effectiveSearchQuery ? (
           <div className="space-y-4">
             <h3 className="text-[10px] md:text-xs font-medium text-muted-foreground uppercase tracking-wider">All Applications</h3>
             <div className="grid grid-cols-1 gap-2">

@@ -5,6 +5,7 @@ import { AppItem } from '@/types';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { AddAppModal } from './add-app-modal';
+import { StorageSwitcher } from './storage-switcher';
 import { LayoutGrid, Menu, Search, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
@@ -146,7 +147,12 @@ export function Sidebar({ apps, selectedAppId, onSelectApp, onAddApp, isMobileOp
         
         {!isCollapsed && (
           <div className="p-4 text-xs text-muted-foreground text-center">
-            ContextKeeper v1.0
+            <StorageSwitcher isCollapsed={isCollapsed} />
+          </div>
+        )}
+        {isCollapsed && (
+          <div className="p-4 flex justify-center">
+            <StorageSwitcher isCollapsed={isCollapsed} />
           </div>
         )}
       </div>
