@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -23,51 +23,65 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { ContextItem } from '@/types';
-import { Plus } from 'lucide-react';
+import { Plus, Edit } from 'lucide-react';
 
 interface AddContextModalProps {
   onAdd: (context: ContextItem) => void;
+  initialData?: ContextItem;
+  trigger?: React.ReactNode;
 }
 
-export function AddContextModal({ onAdd }: AddContextModalProps) {
+export function AddContextModal({ onAdd, initialData, trigger }: AddContextModalProps) {
   const [open, setOpen] = useState(false);
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
-  const [type, setType] = useState<ContextItem['type']>('url');
+  const [title, setTitle] = useState(initialData?.title || '');
+  const [content, setContent] = useState(initialData?.content || '');
+  const [type, setType] = useState<ContextItem['type']>(initialData?.type || 'url');
+
+  useEffect(() => {
+    if (open) {
+      setTitle(initialData?.title || '');
+      setContent(initialData?.content || '');
+      setType(initialData?.type || 'url');
+    }
+  }, [open, initialData]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!title.trim() || !content.trim()) return;
 
     const newContext: ContextItem = {
-      id: uuidv4(),
+      id: initialData?.id || uuidv4(),
       title: title.trim(),
       content: content.trim(),
       type,
-      createdAt: Date.now(),
+      createdAt: initialData?.createdAt || Date.now(),
     };
 
     onAdd(newContext);
     setOpen(false);
-    setTitle('');
-    setContent('');
-    setType('url');
+    if (!initialData) {
+      setTitle('');
+      setContent('');
+      setType('url');
+    }
   };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button size="sm" className="gap-2 bg-blue-50 text-blue-600 hover:bg-blue-100 border border-blue-200 dark:bg-blue-900/20 dark:text-blue-400 dark:border-blue-800/50 dark:hover:bg-blue-900/40 shadow-sm">
-          <Plus className="h-4 w-4" />
-          Add Context
-        </Button>
+        {trigger ? trigger : (
+          <Button size="sm" className="gap-2 bg-blue-50 text-blue-600 hover:bg-blue-100 border border-blue-200 dark:bg-blue-900/20 dark:text-blue-400 dark:border-blue-800/50 dark:hover:bg-blue-900/40 shadow-sm">
+            {initialData ? <Edit className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
+            {initialData ? "Edit Context" : "Add Context"}
+          </Button>
+        )}
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
-            <DialogTitle>Add Context</DialogTitle>
+            <DialogTitle>{initialData ? "Edit Context" : "Add Context"}</DialogTitle>
             <DialogDescription>
-              Save a URL, chat link, or note related to this account.
+              {initialData ? "Update the details of this context item." : "Save a URL, chat link, or note related to this account."}
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
@@ -117,7 +131,7 @@ export function AddContextModal({ onAdd }: AddContextModalProps) {
             </div>
           </div>
           <DialogFooter>
-            <Button type="submit">Save Context</Button>
+            <Button type="submit">{initialData ? "Save Changes" : "Save Context"}</Button>
           </DialogFooter>
         </form>
       </DialogContent>

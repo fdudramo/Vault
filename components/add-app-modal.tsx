@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -16,7 +16,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { AppItem } from '@/types';
-import { Plus } from 'lucide-react';
+import { Plus, Edit } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface AddAppModalProps {
@@ -24,56 +24,67 @@ interface AddAppModalProps {
   isCollapsed?: boolean;
   className?: string;
   variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link";
-  renderTrigger?: React.ReactNode;
+  initialData?: AppItem;
+  trigger?: React.ReactNode;
 }
 
-export function AddAppModal({ onAdd, isCollapsed, className, variant = "outline", renderTrigger }: AddAppModalProps) {
+export function AddAppModal({ onAdd, isCollapsed, className, variant = "outline", initialData, trigger }: AddAppModalProps) {
   const [open, setOpen] = useState(false);
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
-  const [url, setUrl] = useState('');
+  const [name, setName] = useState(initialData?.name || '');
+  const [description, setDescription] = useState(initialData?.description || '');
+  const [url, setUrl] = useState(initialData?.url || '');
+
+  useEffect(() => {
+    if (open) {
+      setName(initialData?.name || '');
+      setDescription(initialData?.description || '');
+      setUrl(initialData?.url || '');
+    }
+  }, [open, initialData]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim()) return;
 
     const newApp: AppItem = {
-      id: uuidv4(),
+      id: initialData?.id || uuidv4(),
       name: name.trim(),
       description: description.trim(),
       url: url.trim(),
-      accounts: [],
-      createdAt: Date.now(),
+      accounts: initialData?.accounts || [],
+      createdAt: initialData?.createdAt || Date.now(),
     };
 
     onAdd(newApp);
     setOpen(false);
-    setName('');
-    setDescription('');
-    setUrl('');
-    toast.success('App added successfully');
+    if (!initialData) {
+      setName('');
+      setDescription('');
+      setUrl('');
+    }
+    toast.success(initialData ? 'App updated successfully' : 'App added successfully');
   };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        {renderTrigger || (
+        {trigger ? trigger : (
           <Button 
             className={className || "w-full justify-start gap-2"} 
             variant={variant}
             size={isCollapsed ? "icon" : "default"}
           >
-            <Plus className={isCollapsed ? "h-5 w-5" : "h-4 w-4"} />
-            {!isCollapsed && "Add New App"}
+            {initialData ? <Edit className={isCollapsed ? "h-5 w-5" : "h-4 w-4"} /> : <Plus className={isCollapsed ? "h-5 w-5" : "h-4 w-4"} />}
+            {!isCollapsed && (initialData ? "Edit App" : "Add New App")}
           </Button>
         )}
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
-            <DialogTitle>Add New Application</DialogTitle>
+            <DialogTitle>{initialData ? "Edit Application" : "Add New Application"}</DialogTitle>
             <DialogDescription>
-              Create a new space to manage accounts and context for an application.
+              {initialData ? "Update the details of this application." : "Create a new space to manage accounts and context for an application."}
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
@@ -108,7 +119,7 @@ export function AddAppModal({ onAdd, isCollapsed, className, variant = "outline"
             </div>
           </div>
           <DialogFooter>
-            <Button type="submit">Save App</Button>
+            <Button type="submit">{initialData ? "Save Changes" : "Save App"}</Button>
           </DialogFooter>
         </form>
       </DialogContent>

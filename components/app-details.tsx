@@ -9,9 +9,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { AddAccountModal } from './add-account-modal';
 import { AddCredentialModal } from './add-credential-modal';
 import { AddContextModal } from './add-context-modal';
+import { AddAppModal } from './add-app-modal';
 import { ConfirmDeleteDialog } from './confirm-delete-dialog';
 import { CopyButton } from './copy-button';
-import { Copy, ExternalLink, Key, Link as LinkIcon, MessageSquare, Trash2, User, Plus } from 'lucide-react';
+import { Copy, ExternalLink, Key, Link as LinkIcon, MessageSquare, Trash2, User, Edit } from 'lucide-react';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
 
@@ -136,6 +137,49 @@ export function AppDetails({ app, onUpdate, onDelete, jumpToAccountId, clearJump
     toast.success('Context deleted successfully');
   };
 
+  const handleEditAccount = (updatedAccount: Account) => {
+    const updatedApp = {
+      ...app,
+      accounts: app.accounts.map(a => a.id === updatedAccount.id ? updatedAccount : a),
+    };
+    onUpdate(updatedApp);
+    toast.success('Account updated successfully');
+  };
+
+  const handleEditCredential = (accountId: string, updatedCredential: Credential) => {
+    const updatedApp = {
+      ...app,
+      accounts: app.accounts.map(a => {
+        if (a.id === accountId) {
+          return {
+            ...a,
+            credentials: a.credentials.map(c => c.id === updatedCredential.id ? updatedCredential : c)
+          };
+        }
+        return a;
+      }),
+    };
+    onUpdate(updatedApp);
+    toast.success('Credential updated successfully');
+  };
+
+  const handleEditContext = (accountId: string, updatedContext: ContextItem) => {
+    const updatedApp = {
+      ...app,
+      accounts: app.accounts.map(a => {
+        if (a.id === accountId) {
+          return {
+            ...a,
+            contexts: a.contexts.map(c => c.id === updatedContext.id ? updatedContext : c)
+          };
+        }
+        return a;
+      }),
+    };
+    onUpdate(updatedApp);
+    toast.success('Context updated successfully');
+  };
+
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
     toast.success('Copied to clipboard');
@@ -145,10 +189,20 @@ export function AppDetails({ app, onUpdate, onDelete, jumpToAccountId, clearJump
 
   return (
     <div className="flex flex-col h-full space-y-4 md:space-y-6">
-      {/* Desktop Header - Hidden on Mobile */}
-      <div className="hidden lg:flex flex-col md:flex-row md:items-start justify-between gap-4 mb-6">
+      <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
         <div>
-          <h2 className="text-2xl md:text-3xl font-bold tracking-tight">{app.name}</h2>
+          <div className="flex items-center gap-3">
+            <h2 className="text-2xl md:text-3xl font-bold tracking-tight">{app.name}</h2>
+            <AddAppModal 
+              onAdd={onUpdate} 
+              initialData={app} 
+              trigger={
+                <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground">
+                  <Edit className="h-4 w-4" />
+                </Button>
+              } 
+            />
+          </div>
           {app.url && (
             <a
               href={app.url}
@@ -181,24 +235,7 @@ export function AppDetails({ app, onUpdate, onDelete, jumpToAccountId, clearJump
 
       <div className="flex items-center justify-between border-b pb-4">
         <h3 className="text-lg md:text-xl font-semibold">Accounts</h3>
-        <div className="flex items-center gap-2">
-          <AddAccountModal onAdd={handleAddAccount} />
-          {/* Mobile Delete Button - Hidden on Desktop */}
-          <div className="lg:hidden">
-            <ConfirmDeleteDialog 
-              onConfirm={() => {
-                onDelete(app.id);
-                toast.success('App deleted successfully');
-              }}
-              title="Delete App?"
-              description={`Are you sure you want to delete "${app.name}"? This will permanently delete all associated accounts, credentials, and context.`}
-            >
-              <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive hover:bg-destructive/10">
-                <Trash2 className="h-4 w-4" />
-              </Button>
-            </ConfirmDeleteDialog>
-          </div>
-        </div>
+        <AddAccountModal onAdd={handleAddAccount} />
       </div>
 
       {app.accounts.length === 0 ? (
@@ -269,15 +306,26 @@ export function AppDetails({ app, onUpdate, onDelete, jumpToAccountId, clearJump
                         )}
                       </CardDescription>
                     </div>
-                    <ConfirmDeleteDialog
-                      onConfirm={() => handleDeleteAccount(selectedAccount.id)}
-                      title="Delete Account?"
-                      description={`Are you sure you want to delete the account "${selectedAccount.name}"? This will permanently delete all associated credentials and context.`}
-                    >
-                      <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive hover:bg-destructive/10 shrink-0">
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </ConfirmDeleteDialog>
+                    <div className="flex items-center gap-1 shrink-0">
+                      <AddAccountModal 
+                        onAdd={handleEditAccount} 
+                        initialData={selectedAccount} 
+                        trigger={
+                          <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground">
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                        }
+                      />
+                      <ConfirmDeleteDialog
+                        onConfirm={() => handleDeleteAccount(selectedAccount.id)}
+                        title="Delete Account?"
+                        description={`Are you sure you want to delete the account "${selectedAccount.name}"? This will permanently delete all associated credentials and context.`}
+                      >
+                        <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive hover:bg-destructive/10 shrink-0">
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </ConfirmDeleteDialog>
+                    </div>
                   </div>
                 </CardHeader>
                 <CardContent className="p-4 md:p-6 pt-0">
@@ -314,6 +362,15 @@ export function AppDetails({ app, onUpdate, onDelete, jumpToAccountId, clearJump
                               </div>
                               <div className="flex items-center gap-1 shrink-0">
                                 <CopyButton textToCopy={cred.value} variant="secondary" size="sm" className="h-7 md:h-8" />
+                                <AddCredentialModal 
+                                  onAdd={(updatedCred) => handleEditCredential(selectedAccount.id, updatedCred)} 
+                                  initialData={cred}
+                                  trigger={
+                                    <Button variant="ghost" size="icon" className="h-7 w-7 md:h-8 md:w-8">
+                                      <Edit className="h-3.5 w-3.5 text-muted-foreground" />
+                                    </Button>
+                                  }
+                                />
                                 <ConfirmDeleteDialog
                                   onConfirm={() => handleDeleteCredential(selectedAccount.id, cred.id)}
                                   title="Delete Credential?"
@@ -359,15 +416,26 @@ export function AppDetails({ app, onUpdate, onDelete, jumpToAccountId, clearJump
                                   )}
                                 </div>
                               </div>
-                              <ConfirmDeleteDialog
-                                onConfirm={() => handleDeleteContext(selectedAccount.id, ctx.id)}
-                                title="Delete Context?"
-                                description={`Are you sure you want to delete the context "${ctx.title}"?`}
-                              >
-                                <Button variant="ghost" size="icon" className="shrink-0 h-7 w-7 md:h-8 md:w-8">
-                                  <Trash2 className="h-3.5 w-3.5 text-muted-foreground" />
-                                </Button>
-                              </ConfirmDeleteDialog>
+                              <div className="flex items-center gap-1 shrink-0">
+                                <AddContextModal 
+                                  onAdd={(updatedCtx) => handleEditContext(selectedAccount.id, updatedCtx)} 
+                                  initialData={ctx}
+                                  trigger={
+                                    <Button variant="ghost" size="icon" className="shrink-0 h-7 w-7 md:h-8 md:w-8">
+                                      <Edit className="h-3.5 w-3.5 text-muted-foreground" />
+                                    </Button>
+                                  }
+                                />
+                                <ConfirmDeleteDialog
+                                  onConfirm={() => handleDeleteContext(selectedAccount.id, ctx.id)}
+                                  title="Delete Context?"
+                                  description={`Are you sure you want to delete the context "${ctx.title}"?`}
+                                >
+                                  <Button variant="ghost" size="icon" className="shrink-0 h-7 w-7 md:h-8 md:w-8">
+                                    <Trash2 className="h-3.5 w-3.5 text-muted-foreground" />
+                                  </Button>
+                                </ConfirmDeleteDialog>
+                              </div>
                             </div>
                           ))}
                         </div>

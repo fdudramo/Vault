@@ -124,7 +124,7 @@ export function AuthScreen() {
           </form>
           
           <p className="text-xs text-center text-muted-foreground mt-4">
-            If you don't have an account, one will be created automatically.
+            If you don&apos;t have an account, one will be created automatically.
           </p>
         </div>
       </div>

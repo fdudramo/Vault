@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -22,51 +22,65 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Credential } from '@/types';
-import { Plus } from 'lucide-react';
+import { Plus, Edit } from 'lucide-react';
 
 interface AddCredentialModalProps {
   onAdd: (credential: Credential) => void;
+  initialData?: Credential;
+  trigger?: React.ReactNode;
 }
 
-export function AddCredentialModal({ onAdd }: AddCredentialModalProps) {
+export function AddCredentialModal({ onAdd, initialData, trigger }: AddCredentialModalProps) {
   const [open, setOpen] = useState(false);
-  const [name, setName] = useState('');
-  const [value, setValue] = useState('');
-  const [type, setType] = useState<Credential['type']>('apikey');
+  const [name, setName] = useState(initialData?.name || '');
+  const [value, setValue] = useState(initialData?.value || '');
+  const [type, setType] = useState<Credential['type']>(initialData?.type || 'apikey');
+
+  useEffect(() => {
+    if (open) {
+      setName(initialData?.name || '');
+      setValue(initialData?.value || '');
+      setType(initialData?.type || 'apikey');
+    }
+  }, [open, initialData]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim() || !value.trim()) return;
 
     const newCredential: Credential = {
-      id: uuidv4(),
+      id: initialData?.id || uuidv4(),
       name: name.trim(),
       value: value.trim(),
       type,
-      createdAt: Date.now(),
+      createdAt: initialData?.createdAt || Date.now(),
     };
 
     onAdd(newCredential);
     setOpen(false);
-    setName('');
-    setValue('');
-    setType('apikey');
+    if (!initialData) {
+      setName('');
+      setValue('');
+      setType('apikey');
+    }
   };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button size="sm" className="gap-2 bg-blue-50 text-blue-600 hover:bg-blue-100 border border-blue-200 dark:bg-blue-900/20 dark:text-blue-400 dark:border-blue-800/50 dark:hover:bg-blue-900/40 shadow-sm">
-          <Plus className="h-4 w-4" />
-          Add Credential
-        </Button>
+        {trigger ? trigger : (
+          <Button size="sm" className="gap-2 bg-blue-50 text-blue-600 hover:bg-blue-100 border border-blue-200 dark:bg-blue-900/20 dark:text-blue-400 dark:border-blue-800/50 dark:hover:bg-blue-900/40 shadow-sm">
+            {initialData ? <Edit className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
+            {initialData ? "Edit Credential" : "Add Credential"}
+          </Button>
+        )}
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
-            <DialogTitle>Add Credential</DialogTitle>
+            <DialogTitle>{initialData ? "Edit Credential" : "Add Credential"}</DialogTitle>
             <DialogDescription>
-              Store an API key, token, or password for this account.
+              {initialData ? "Update the details of this credential." : "Store an API key, token, or password for this account."}
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
@@ -107,7 +121,7 @@ export function AddCredentialModal({ onAdd }: AddCredentialModalProps) {
             </div>
           </div>
           <DialogFooter>
-            <Button type="submit">Save Credential</Button>
+            <Button type="submit">{initialData ? "Save Changes" : "Save Credential"}</Button>
           </DialogFooter>
         </form>
       </DialogContent>

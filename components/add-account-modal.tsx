@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -22,59 +22,75 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Account, AuthMethod } from '@/types';
-import { Plus } from 'lucide-react';
+import { Plus, Edit } from 'lucide-react';
 
 interface AddAccountModalProps {
   onAdd: (account: Account) => void;
+  initialData?: Account;
+  trigger?: React.ReactNode;
 }
 
-export function AddAccountModal({ onAdd }: AddAccountModalProps) {
+export function AddAccountModal({ onAdd, initialData, trigger }: AddAccountModalProps) {
   const [open, setOpen] = useState(false);
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [authMethod, setAuthMethod] = useState<AuthMethod>('email');
+  const [name, setName] = useState(initialData?.name || '');
+  const [email, setEmail] = useState(initialData?.email || '');
+  const [username, setUsername] = useState(initialData?.username || '');
+  const [password, setPassword] = useState(initialData?.password || '');
+  const [authMethod, setAuthMethod] = useState<AuthMethod>(initialData?.authMethod || 'email');
+
+  useEffect(() => {
+    if (open) {
+      setName(initialData?.name || '');
+      setEmail(initialData?.email || '');
+      setUsername(initialData?.username || '');
+      setPassword(initialData?.password || '');
+      setAuthMethod(initialData?.authMethod || 'email');
+    }
+  }, [open, initialData]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim()) return;
 
     const newAccount: Account = {
-      id: uuidv4(),
+      id: initialData?.id || uuidv4(),
       name: name.trim(),
       email: email.trim(),
       username: username.trim(),
       password: password,
       authMethod,
-      credentials: [],
-      contexts: [],
-      createdAt: Date.now(),
+      credentials: initialData?.credentials || [],
+      contexts: initialData?.contexts || [],
+      createdAt: initialData?.createdAt || Date.now(),
     };
 
     onAdd(newAccount);
     setOpen(false);
-    setName('');
-    setEmail('');
-    setUsername('');
-    setPassword('');
-    setAuthMethod('email');
+    if (!initialData) {
+      setName('');
+      setEmail('');
+      setUsername('');
+      setPassword('');
+      setAuthMethod('email');
+    }
   };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button size="sm" className="gap-2">
-          <Plus className="h-4 w-4" />
-          Add Account
-        </Button>
+        {trigger ? trigger : (
+          <Button size="sm" className="gap-2">
+            {initialData ? <Edit className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
+            {initialData ? "Edit Account" : "Add Account"}
+          </Button>
+        )}
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
-            <DialogTitle>Add New Account</DialogTitle>
+            <DialogTitle>{initialData ? "Edit Account" : "Add New Account"}</DialogTitle>
             <DialogDescription>
-              Add a new account profile for this application.
+              {initialData ? "Update the details of this account profile." : "Add a new account profile for this application."}
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
@@ -136,7 +152,7 @@ export function AddAccountModal({ onAdd }: AddAccountModalProps) {
             </div>
           </div>
           <DialogFooter>
-            <Button type="submit">Save Account</Button>
+            <Button type="submit">{initialData ? "Save Changes" : "Save Account"}</Button>
           </DialogFooter>
         </form>
       </DialogContent>
