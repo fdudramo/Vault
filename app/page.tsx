@@ -126,88 +126,86 @@ export default function LandingPage() {
         </section>
 
         {/* Pricing Section */}
-        <section className="py-24 border-t border-white/5">
-          <div className="container mx-auto px-4">
-            <div className="mb-12 max-w-3xl">
-              <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">plans & pricing</h2>
+        <section className="py-16 md:py-32">
+          <div className="mx-auto max-w-5xl px-6">
+            <div className="mx-auto max-w-2xl space-y-6 text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-bold tracking-tight">plans & pricing</h2>
               <p className="text-muted-foreground text-lg">
                 secure your accounts exactly how you want.
               </p>
             </div>
 
-            <div className="mx-auto max-w-5xl">
-              <div className="grid gap-6 md:grid-cols-5 md:gap-0">
-                <div className="rounded-(--radius) flex flex-col justify-between space-y-8 border border-white/10 bg-white/[0.02] p-6 md:col-span-2 md:my-2 md:rounded-r-none md:border-r-0 lg:p-10">
+            <div className="mt-8 grid gap-6 md:mt-20 md:grid-cols-5 md:gap-0">
+              <div className="rounded-(--radius) flex flex-col justify-between space-y-8 border border-white/10 bg-white/[0.02] p-6 md:col-span-2 md:my-2 md:rounded-r-none md:border-r-0 lg:p-10">
+                <div className="space-y-4">
+                  <div>
+                    <h2 className="font-medium">Free Plan</h2>
+                    <span className="my-3 block text-2xl font-semibold">$0 / forever</span>
+                    <p className="text-muted-foreground text-sm">Perfect for simple local storage.</p>
+                  </div>
+
+                  <Link href="/app">
+                    <Button variant="outline" className="w-full border-white/10 hover:border-white/20">Get Started</Button>
+                  </Link>
+
+                  <hr className="border-dashed border-white/10" />
+
+                  <ul className="list-outside space-y-3 text-sm">
+                    {[
+                      "Local storage only",
+                      "Secure: no one can access your passwords but you",
+                      "Nothing linked to your account",
+                    ].map((item, index) => (
+                      <li key={index} className="flex items-center gap-2">
+                        <CheckCircle2 className="size-4 text-blue-400" />
+                        {item}
+                      </li>
+                    ))}
+                    <li className="text-muted-foreground text-sm italic">
+                      Note: If you clear your browser storage, cache, or update, your data will be gone!
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              <div className="rounded-(--radius) border border-white/10 bg-white/[0.02] p-6 shadow-lg shadow-gray-950/5 md:col-span-3 lg:p-10">
+                <div className="grid gap-6 sm:grid-cols-2">
                   <div className="space-y-4">
                     <div>
-                      <h2 className="font-medium">Free Plan</h2>
-                      <span className="my-3 block text-2xl font-semibold">$0 / forever</span>
-                      <p className="text-muted-foreground text-sm">Perfect for simple local storage.</p>
+                      <div className="absolute top-0 right-0 bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-bl-lg">
+                        RECOMMENDED
+                      </div>
+                      <h2 className="font-medium text-blue-400">Pro Plan</h2>
+                      <span className="my-3 block text-2xl font-semibold">$1 / mo</span>
+                      <p className="text-muted-foreground text-sm">billed annually</p>
                     </div>
 
-                    <Link href="/app">
-                      <Button variant="outline" className="w-full border-white/10 hover:border-white/20">Fully Free</Button>
-                    </Link>
+                    <Button 
+                      className="w-full bg-blue-500 text-white hover:bg-blue-600"
+                      onClick={() => window.open('https://t.me/OmarGatara', '_blank')}
+                    >
+                      Talk to me
+                    </Button>
+                  </div>
 
-                    <hr className="border-dashed border-white/10" />
+                  <div>
+                    <div className="text-sm font-medium">Everything in free plus:</div>
 
-                    <ul className="list-outside space-y-3 text-sm">
+                    <ul className="mt-4 list-outside space-y-3 text-sm">
                       {[
-                        { icon: <HardDrive className="h-4 w-4" />, text: "Local storage only" },
-                        { icon: <Lock className="h-4 w-4" />, text: "Secure: no one can access your passwords but you" },
-                        { icon: <Shield className="h-4 w-4" />, text: "Nothing linked to your account" },
+                        "Bring your own database (Supabase)",
+                        "Maximum security",
+                        "DB credentials saved in your Chrome storage (none linked to your account)",
                       ].map((item, index) => (
                         <li key={index} className="flex items-center gap-2">
                           <CheckCircle2 className="size-4 text-blue-400" />
-                          {item.text}
+                          {item}
                         </li>
                       ))}
                       <li className="text-muted-foreground text-sm italic">
-                        Note: If you clear your browser storage, cache, or update, your data will be gone!
+                        Note: If you clear browser storage, you just need to re-authenticate your Supabase. Your data is safe!
                       </li>
                     </ul>
-                  </div>
-                </div>
-
-                <div className="dark:bg-muted rounded-(--radius) border border-blue-500/20 bg-blue-500/5 p-6 shadow-lg shadow-gray-950/5 md:col-span-3 lg:p-10 dark:[--color-muted:var(--color-zinc-900)]">
-                  <div className="absolute top-0 right-0 bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-bl-lg">
-                    RECOMMENDED
-                  </div>
-                  <div className="grid gap-6 sm:grid-cols-2">
-                    <div className="space-y-4">
-                      <div>
-                        <h2 className="font-medium text-blue-400">Pro Plan</h2>
-                        <span className="my-3 block text-2xl font-semibold">$1 / mo</span>
-                        <p className="text-muted-foreground text-sm">billed annually</p>
-                      </div>
-
-                      <Button 
-                        className="w-full bg-blue-500 text-white hover:bg-blue-600"
-                        onClick={() => window.open('https://t.me/OmarGatara', '_blank')}
-                      >
-                        Subscribe via Telegram
-                      </Button>
-                    </div>
-
-                    <div>
-                      <div className="text-sm font-medium">Everything in free plus:</div>
-
-                      <ul className="mt-4 list-outside space-y-3 text-sm">
-                        {[
-                          "Bring your own database (Supabase)",
-                          "Maximum security",
-                          "DB credentials saved in your Chrome storage (none linked to your account)",
-                        ].map((item, index) => (
-                          <li key={index} className="flex items-center gap-2">
-                            <CheckCircle2 className="size-4 text-blue-400" />
-                            {item}
-                          </li>
-                        ))}
-                        <li className="text-muted-foreground text-sm italic">
-                          Note: If you clear browser storage, you just need to re-authenticate your Supabase. Your data is safe!
-                        </li>
-                      </ul>
-                    </div>
                   </div>
                 </div>
               </div>

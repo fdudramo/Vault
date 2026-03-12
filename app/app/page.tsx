@@ -18,6 +18,7 @@ export default function Home() {
   const [selectedAppId, setSelectedAppId] = useState<string | null>('home');
   const [jumpToAccountId, setJumpToAccountId] = useState<string | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -119,6 +120,8 @@ export default function Home() {
           {selectedAppId === 'home' || selectedAppId === null ? (
             <HomeDashboard 
               apps={apps} 
+              searchQuery={searchQuery}
+              onSearchChange={setSearchQuery}
               onSelectApp={(appId, accountId) => {
                 setSelectedAppId(appId);
                 if (accountId) setJumpToAccountId(accountId);
