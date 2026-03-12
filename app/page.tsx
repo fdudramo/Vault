@@ -557,7 +557,7 @@ export default function LandingPage() {
                 </CardHeader>
 
                 <CardContent>
-                  <p className="mt-3 text-sm text-muted-foreground">
+                  <p className="text-sm text-muted-foreground">
                     nothing is linked to your account. bring your own supabase
                     db or use local storage.
                   </p>
@@ -574,7 +574,7 @@ export default function LandingPage() {
                 </CardHeader>
 
                 <CardContent>
-                  <p className="mt-3 text-sm text-muted-foreground">
+                  <p className="text-sm text-muted-foreground">
                     local storage is free. supabase sync is $1/month. thats it.
                   </p>
                 </CardContent>
