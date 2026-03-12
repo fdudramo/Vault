@@ -475,9 +475,8 @@ export default function LandingPage() {
           <div className="container mx-auto px-4">
             <div className="mx-auto max-w-2xl">
               <div className="space-y-4 text-left">
-                <p className="text-muted-foreground">
-                  Yesterday I lost 20 minutes trying to find the right API
-                  token.
+                <p className="text-xl md:text-2xl font-medium text-foreground/90">
+                  Yesterday I lost 7 minutes trying to find the right API token.
                 </p>
 
                 <ul className="list-none space-y-1 text-muted-foreground">
@@ -487,7 +486,7 @@ export default function LandingPage() {
                 </ul>
 
                 <p className="text-muted-foreground">
-                  Like most developers, I have multiple accounts for everything:
+                  Like most devs, I have multiple accounts for everything:
                   different apps, different tokens, different environments.
                 </p>
 
