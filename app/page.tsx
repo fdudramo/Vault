@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import {
   Database,
   Copy,
@@ -9,8 +10,12 @@ import {
   Shield,
   HardDrive,
   Lock,
+  Settings2,
+  Sparkles,
+  Zap,
 } from "lucide-react";
 import { motion } from "motion/react";
+import { ReactNode } from "react";
 
 export default function LandingPage() {
   return (
@@ -434,8 +439,8 @@ export default function LandingPage() {
                           y2="71.8295"
                           gradientUnits="userSpaceOnUse"
                         >
-                          <stop stop-color="#249361" />
-                          <stop offset="1" stop-color="#3ECF8E" />
+                          <stop stopColor="#249361" />
+                          <stop offset="1" stopColor="#3ECF8E" />
                         </linearGradient>
                       </defs>
                     </svg>
@@ -510,50 +515,66 @@ export default function LandingPage() {
         </section>
 
         {/* What you get Section */}
-        <section className="py-24 border-t border-white/5 bg-black/50">
-          <div className="container mx-auto px-4">
-            <div className="mb-16 max-w-3xl">
-              <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">
-                what u get
+        <section className="bg-zinc-50 py-16 md:py-32 dark:bg-transparent">
+          <div className="@container mx-auto max-w-5xl px-6">
+            <div className="text-center">
+              <h2 className="text-balance text-4xl font-semibold lg:text-5xl">
+                Built to cover your needs
               </h2>
+              <p className="mt-4 text-muted-foreground">
+                Everything you need to manage your dev accounts
+              </p>
             </div>
+            <div className="@min-4xl:max-w-full @min-4xl:grid-cols-3 mx-auto mt-8 grid max-w-sm gap-6 *:text-center md:mt-16">
+              <Card className="group shadow-zinc-950/5">
+                <CardHeader className="pb-3">
+                  <CardDecorator>
+                    <Zap className="size-6" aria-hidden />
+                  </CardDecorator>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[
-                {
-                  icon: <Database className="size-5 text-blue-400" />,
-                  title: "one vault per app",
-                  description:
-                    "keep each app's accounts, tokens, api keys, and context all in one place.",
-                },
-                {
-                  icon: <Copy className="size-5 text-blue-400" />,
-                  title: "copy fast",
-                  description:
-                    "one click to copy any token or key. no more digging through settings.",
-                },
-                {
-                  icon: <CheckCircle2 className="size-5 text-blue-400" />,
-                  title: "its free",
-                  description:
-                    "local storage is free. supabase sync is $1/month. thats it.",
-                },
-              ].map((feature, i) => (
-                <div
-                  key={i}
-                  className="p-6 rounded-2xl border border-white/5 bg-white/[0.02] hover:bg-white/[0.04] transition-colors"
-                >
-                  <div className="size-10 rounded-lg bg-blue-500/10 flex items-center justify-center border border-blue-500/20 mb-4">
-                    {feature.icon}
-                  </div>
-                  <h3 className="text-xl font-semibold mb-2">
-                    {feature.title}
-                  </h3>
-                  <p className="text-muted-foreground leading-relaxed">
-                    {feature.description}
+                  <h3 className="mt-6 font-medium">one vault per app</h3>
+                </CardHeader>
+
+                <CardContent>
+                  <p className="text-sm text-muted-foreground">
+                    keep each app's accounts, tokens, api keys, and context all
+                    in one place.
                   </p>
-                </div>
-              ))}
+                </CardContent>
+              </Card>
+
+              <Card className="group shadow-zinc-950/5">
+                <CardHeader className="pb-3">
+                  <CardDecorator>
+                    <Settings2 className="size-6" aria-hidden />
+                  </CardDecorator>
+
+                  <h3 className="mt-6 font-medium">You have full control</h3>
+                </CardHeader>
+
+                <CardContent>
+                  <p className="mt-3 text-sm text-muted-foreground">
+                    From design elements to functionality, you have complete
+                    control to create a unique and personalized experience.
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card className="group shadow-zinc-950/5">
+                <CardHeader className="pb-3">
+                  <CardDecorator>
+                    <Sparkles className="size-6" aria-hidden />
+                  </CardDecorator>
+
+                  <h3 className="mt-6 font-medium">its free</h3>
+                </CardHeader>
+
+                <CardContent>
+                  <p className="mt-3 text-sm text-muted-foreground">
+                    local storage is free. supabase sync is $1/month. thats it.
+                  </p>
+                </CardContent>
+              </Card>
             </div>
           </div>
         </section>
@@ -670,3 +691,16 @@ export default function LandingPage() {
     </div>
   );
 }
+
+const CardDecorator = ({ children }: { children: ReactNode }) => (
+  <div className="mask-radial-from-40% mask-radial-to-60% relative mx-auto size-36 duration-200 [--color-border:color-mix(in_oklab,var(--color-zinc-950)10%,transparent)] group-hover:[--color-border:color-mix(in_oklab,var(--color-zinc-950)20%,transparent)] dark:[--color-border:color-mix(in_oklab,var(--color-white)15%,transparent)] dark:group-hover:[--color-border:color-mix(in_oklab,var(--color-white)20%,transparent)]">
+    <div
+      aria-hidden
+      className="absolute inset-0 bg-[linear-gradient(to_right,var(--color-border)_1px,transparent_1px),linear-gradient(to_bottom,var(--color-border)_1px,transparent_1px)] bg-[size:24px_24px] dark:opacity-50"
+    />
+
+    <div className="bg-background absolute inset-0 m-auto flex size-12 items-center justify-center border-l border-t">
+      {children}
+    </div>
+  </div>
+);
