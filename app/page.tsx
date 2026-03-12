@@ -72,7 +72,7 @@ export default function LandingPage() {
               </span>
             </motion.h1>
 
-            <motion.p
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
@@ -114,7 +114,7 @@ export default function LandingPage() {
                   No digging through settings. No guessing which account it was.
                 </p>
               </div>
-            </motion.p>
+            </motion.div>
 
             <motion.div
               initial={{ opacity: 0, y: 20 }}
