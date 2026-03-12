@@ -135,90 +135,80 @@ export default function LandingPage() {
               </p>
             </div>
 
-            <div className="max-w-5xl mx-auto rounded-2xl overflow-hidden border border-white/5 bg-white/[0.02] shadow-[0_24px_80px_-40px_rgba(0,0,0,0.9)]">
-              <div className="p-6 sm:p-8 bg-white/[0.03] border-b border-white/5">
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                  <div>
-                    <h3 className="text-xl font-semibold">simple plans, clear choices</h3>
-                    <p className="text-muted-foreground text-sm mt-1">no hidden tiers, no weird limits.</p>
+            <div className="mx-auto max-w-5xl">
+              <div className="grid gap-6 md:grid-cols-5 md:gap-0">
+                <div className="rounded-(--radius) flex flex-col justify-between space-y-8 border border-white/10 bg-white/[0.02] p-6 md:col-span-2 md:my-2 md:rounded-r-none md:border-r-0 lg:p-10">
+                  <div className="space-y-4">
+                    <div>
+                      <h2 className="font-medium">Free Plan</h2>
+                      <span className="my-3 block text-2xl font-semibold">$0 / forever</span>
+                      <p className="text-muted-foreground text-sm">Perfect for simple local storage.</p>
+                    </div>
+
+                    <Link href="/app">
+                      <Button variant="outline" className="w-full border-white/10 hover:border-white/20">Fully Free</Button>
+                    </Link>
+
+                    <hr className="border-dashed border-white/10" />
+
+                    <ul className="list-outside space-y-3 text-sm">
+                      {[
+                        { icon: <HardDrive className="h-4 w-4" />, text: "Local storage only" },
+                        { icon: <Lock className="h-4 w-4" />, text: "Secure: no one can access your passwords but you" },
+                        { icon: <Shield className="h-4 w-4" />, text: "Nothing linked to your account" },
+                      ].map((item, index) => (
+                        <li key={index} className="flex items-center gap-2">
+                          <CheckCircle2 className="size-4 text-blue-400" />
+                          {item.text}
+                        </li>
+                      ))}
+                      <li className="text-muted-foreground text-sm italic">
+                        Note: If you clear your browser storage, cache, or update, your data will be gone!
+                      </li>
+                    </ul>
                   </div>
-                  <Link href="/app">
-                    <Button variant="ghost" className="text-muted-foreground hover:text-foreground">
-                      get your own vault
-                    </Button>
-                  </Link>
                 </div>
-              </div>
 
-              <div className="grid lg:grid-cols-2 gap-0 divide-y lg:divide-y-0 lg:divide-x">
-                <div className="p-7 sm:p-9 lg:p-10 flex flex-col h-full bg-background">
-                <div className="mb-4">
-                  <h3 className="text-xl font-bold">Free Plan</h3>
-                  <p className="text-muted-foreground text-sm mt-1">Perfect for simple local storage.</p>
-                </div>
-                <div className="mb-7">
-                  <span className="text-4xl font-extrabold">$0</span>
-                  <span className="text-muted-foreground">/forever</span>
-                </div>
-                <ul className="space-y-4 mb-8">
-                  <li className="flex items-start gap-3">
-                    <HardDrive className="h-5 w-5 text-blue-400 shrink-0 mt-0.5" />
-                    <span className="text-sm leading-relaxed">Local storage only</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <Lock className="h-5 w-5 text-blue-400 shrink-0 mt-0.5" />
-                    <span className="text-sm leading-relaxed">Secure: no one can access your passwords but you</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <Shield className="h-5 w-5 text-blue-400 shrink-0 mt-0.5" />
-                    <span className="text-sm leading-relaxed">Nothing linked to your account</span>
-                  </li>
-                  <li className="flex items-start gap-3 text-muted-foreground">
-                    <span className="text-sm italic leading-relaxed">Note: If you clear your browser storage, cache, or update, your data will be gone!</span>
-                  </li>
-                </ul>
-                <Link href="/app">
-                  <Button variant="outline" className="w-full border-white/10 hover:border-white/20">
-                    Fully Free
-                  </Button>
-                </Link>
-              </div>
-
-                <div className="p-7 sm:p-9 lg:p-10 flex flex-col h-full bg-blue-500/5 relative">
+                <div className="dark:bg-muted rounded-(--radius) border border-blue-500/20 bg-blue-500/5 p-6 shadow-lg shadow-gray-950/5 md:col-span-3 lg:p-10 dark:[--color-muted:var(--color-zinc-900)]">
                   <div className="absolute top-0 right-0 bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-bl-lg">
                     RECOMMENDED
                   </div>
-                  <div className="mb-4">
-                    <h3 className="text-xl font-bold text-blue-400">Pro Plan</h3>
-                    <p className="text-muted-foreground text-sm mt-1">Take control with your own database.</p>
+                  <div className="grid gap-6 sm:grid-cols-2">
+                    <div className="space-y-4">
+                      <div>
+                        <h2 className="font-medium text-blue-400">Pro Plan</h2>
+                        <span className="my-3 block text-2xl font-semibold">$1 / mo</span>
+                        <p className="text-muted-foreground text-sm">billed annually</p>
+                      </div>
+
+                      <Button 
+                        className="w-full bg-blue-500 text-white hover:bg-blue-600"
+                        onClick={() => window.open('https://t.me/OmarGatara', '_blank')}
+                      >
+                        Subscribe via Telegram
+                      </Button>
+                    </div>
+
+                    <div>
+                      <div className="text-sm font-medium">Everything in free plus:</div>
+
+                      <ul className="mt-4 list-outside space-y-3 text-sm">
+                        {[
+                          "Bring your own database (Supabase)",
+                          "Maximum security",
+                          "DB credentials saved in your Chrome storage (none linked to your account)",
+                        ].map((item, index) => (
+                          <li key={index} className="flex items-center gap-2">
+                            <CheckCircle2 className="size-4 text-blue-400" />
+                            {item}
+                          </li>
+                        ))}
+                        <li className="text-muted-foreground text-sm italic">
+                          Note: If you clear browser storage, you just need to re-authenticate your Supabase. Your data is safe!
+                        </li>
+                      </ul>
+                    </div>
                   </div>
-                  <div className="mb-7">
-                    <span className="text-4xl font-extrabold">$1</span>
-                    <span className="text-muted-foreground">/mo (billed annually)</span>
-                  </div>
-                  <ul className="space-y-4 mb-8">
-                    <li className="flex items-start gap-3">
-                      <Database className="h-5 w-5 text-blue-400 shrink-0 mt-0.5" />
-                      <span className="text-sm font-medium leading-relaxed">Bring your own database (Supabase)</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <Shield className="h-5 w-5 text-blue-400 shrink-0 mt-0.5" />
-                      <span className="text-sm leading-relaxed">Maximum security</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <Lock className="h-5 w-5 text-blue-400 shrink-0 mt-0.5" />
-                      <span className="text-sm leading-relaxed">DB credentials saved in your Chrome storage (none linked to your account)</span>
-                    </li>
-                    <li className="flex items-start gap-3 text-muted-foreground">
-                      <span className="text-sm italic leading-relaxed">Note: If you clear browser storage, you just need to re-authenticate your Supabase. Your data is safe!</span>
-                    </li>
-                  </ul>
-                  <Button 
-                    className="w-full bg-blue-500 text-white hover:bg-blue-600"
-                    onClick={() => window.open('https://t.me/OmarGatara', '_blank')}
-                  >
-                    Subscribe via Telegram
-                  </Button>
                 </div>
               </div>
             </div>
