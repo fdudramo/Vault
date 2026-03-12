@@ -451,14 +451,14 @@ export default function LandingPage() {
 
             {/* Hero text and button */}
             <div className="mx-auto mt-20 max-w-2xl text-center">
-              <h1 className="mt-4 text-balance text-4xl font-semibold md:text-5xl lg:text-6xl">
+              <h1 className="mt-4 text-5xl md:text-6xl font-bold tracking-tight">
                 One vault. for all your
                 <br className="hidden md:block" />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-600">
                   dev accounts
                 </span>
               </h1>
-              <p className="text-muted-foreground mx-auto mb-6 mt-4 max-w-xl text-balance text-lg">
+              <p className="text-muted-foreground mx-auto mb-6 mt-4 max-w-xl tracking-tight">
                 the one you've been actually looking for
               </p>
               <Link href="/app">
@@ -518,10 +518,10 @@ export default function LandingPage() {
         <section className="bg-zinc-50 py-16 md:py-32 dark:bg-transparent">
           <div className="@container mx-auto max-w-5xl px-6">
             <div className="text-center">
-              <h2 className="text-balance text-4xl font-semibold lg:text-5xl">
+              <h2 className="text-3xl md:text-4xl font-bold tracking-tight">
                 Built to cover your needs
               </h2>
-              <p className="mt-4 text-muted-foreground">
+              <p className="tracking-tight mt-4 text-muted-foreground">
                 Everything you need to manage your dev accounts
               </p>
             </div>
@@ -588,11 +588,8 @@ export default function LandingPage() {
           <div className="mx-auto max-w-5xl px-6">
             <div className="mx-auto max-w-2xl space-y-6 text-center mb-12">
               <h2 className="text-3xl md:text-4xl font-bold tracking-tight">
-                plans & pricing
+                the vault you've been looking for
               </h2>
-              <p className="text-muted-foreground text-lg">
-                secure your accounts exactly how you want.
-              </p>
             </div>
 
             <div className="mt-8 grid gap-6 md:mt-20 md:grid-cols-5 md:gap-0">
