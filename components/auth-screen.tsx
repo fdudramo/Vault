@@ -5,13 +5,13 @@ import { supabase } from "@/lib/supabase"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { LayoutGrid, Lock, Mail } from "lucide-react"
+import { LayoutGrid, Lock, Mail, Eye, EyeOff } from "lucide-react"
 import { toast } from "sonner"
 
 export function AuthScreen() {
-  const [isLogin, setIsLogin] = useState(true)
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
 
   const handleAuth = async (e: React.FormEvent) => {
@@ -19,20 +19,35 @@ export function AuthScreen() {
     setLoading(true)
 
     try {
-      if (isLogin) {
-        const { error } = await supabase.auth.signInWithPassword({
-          email,
-          password,
-        })
-        if (error) throw error
-        toast.success("Successfully signed in")
+      // Try to sign in first
+      const { data, error: signInError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      })
+
+      if (signInError) {
+        // If sign in fails with invalid credentials, it might be a new user
+        if (signInError.message.includes("Invalid login credentials")) {
+          const { error: signUpError } = await supabase.auth.signUp({
+            email,
+            password,
+          })
+          
+          if (signUpError) {
+            // If the user is already registered, it means they just entered the wrong password
+            if (signUpError.message.includes("User already registered")) {
+              throw new Error("Invalid password for this account.")
+            }
+            throw signUpError
+          } else {
+            toast.success("Account created successfully! You are now signed in.")
+          }
+        } else {
+          // Some other error occurred during sign in
+          throw signInError
+        }
       } else {
-        const { error } = await supabase.auth.signUp({
-          email,
-          password,
-        })
-        if (error) throw error
-        toast.success("Account created successfully")
+        toast.success("Successfully signed in")
       }
     } catch (error: any) {
       toast.error(error.message || "An error occurred during authentication")
@@ -55,8 +70,8 @@ export function AuthScreen() {
         </div>
 
         <div className="rounded-xl border bg-card p-8 shadow-sm">
-          <h2 className="text-xl font-semibold mb-6">
-            {isLogin ? "Sign in to your account" : "Create a new account"}
+          <h2 className="text-xl font-semibold mb-6 text-center">
+            Sign In or Create Account
           </h2>
 
           <form onSubmit={handleAuth} className="space-y-4">
@@ -82,33 +97,35 @@ export function AuthScreen() {
                 <Lock className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
                 <Input
                   id="password"
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   placeholder="••••••••"
-                  className="pl-9"
+                  className="pl-9 pr-10"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-2.5 text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-4 w-4" />
+                  ) : (
+                    <Eye className="h-4 w-4" />
+                  )}
+                </button>
               </div>
             </div>
 
-            <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? "Please wait..." : isLogin ? "Sign In" : "Sign Up"}
+            <Button type="submit" className="w-full mt-6" disabled={loading}>
+              {loading ? "Please wait..." : "Continue"}
             </Button>
           </form>
-
-          <div className="mt-6 text-center text-sm">
-            <span className="text-muted-foreground">
-              {isLogin ? "Don't have an account? " : "Already have an account? "}
-            </span>
-            <button
-              type="button"
-              onClick={() => setIsLogin(!isLogin)}
-              className="font-medium text-primary hover:underline"
-            >
-              {isLogin ? "Sign up" : "Sign in"}
-            </button>
-          </div>
+          
+          <p className="text-xs text-center text-muted-foreground mt-4">
+            If you don't have an account, one will be created automatically.
+          </p>
         </div>
       </div>
     </div>

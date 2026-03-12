@@ -46,6 +46,11 @@ export default function Home() {
         <div className="animate-pulse flex flex-col items-center gap-4">
           <LayoutGrid className="h-8 w-8 text-primary" />
           <p className="text-muted-foreground">Loading Vault...</p>
+          <div className="text-xs text-muted-foreground opacity-50 flex flex-col items-center">
+            <span>Auth Loading: {authLoading ? 'Yes' : 'No'}</span>
+            <span>Data Loaded: {isLoaded ? 'Yes' : 'No'}</span>
+            <span>Has User: {user ? 'Yes' : 'No'}</span>
+          </div>
         </div>
       </div>
     );
