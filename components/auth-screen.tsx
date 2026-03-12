@@ -13,6 +13,7 @@ export function AuthScreen() {
   const [password, setPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [oauthLoading, setOauthLoading] = useState(false)
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -53,6 +54,26 @@ export function AuthScreen() {
       toast.error(error.message || "An error occurred during authentication")
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleGoogleSignIn = async () => {
+    setOauthLoading(true)
+    try {
+      const redirectTo = `${window.location.origin}/`
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo,
+        },
+      })
+
+      if (error) {
+        throw error
+      }
+    } catch (error: any) {
+      toast.error(error.message || "Unable to sign in with Google")
+      setOauthLoading(false)
     }
   }
 
@@ -122,6 +143,42 @@ export function AuthScreen() {
               {loading ? "Please wait..." : "Continue"}
             </Button>
           </form>
+
+          <div className="my-5 flex items-center gap-3">
+            <div className="h-px flex-1 bg-border" />
+            <span className="text-xs text-muted-foreground">or</span>
+            <div className="h-px flex-1 bg-border" />
+          </div>
+
+          <Button
+            type="button"
+            variant="outline"
+            className="w-full"
+            onClick={handleGoogleSignIn}
+            disabled={oauthLoading}
+          >
+            <span className="mr-2 inline-flex h-4 w-4 items-center justify-center">
+              <svg viewBox="0 0 24 24" aria-hidden="true" className="h-4 w-4">
+                <path
+                  d="M21.6 12.227c0-.71-.064-1.39-.182-2.045H12v3.87h5.37c-.232 1.25-.94 2.31-2.01 3.02v2.51h3.25c1.9-1.75 2.99-4.33 2.99-7.355z"
+                  fill="#4285F4"
+                />
+                <path
+                  d="M12 22c2.7 0 4.97-.9 6.63-2.45l-3.25-2.51c-.9.6-2.05.96-3.38.96-2.6 0-4.8-1.75-5.58-4.1H3.06v2.58C4.71 19.98 8.08 22 12 22z"
+                  fill="#34A853"
+                />
+                <path
+                  d="M6.42 13.9A5.99 5.99 0 0 1 6.1 12c0-.66.12-1.3.32-1.9V7.52H3.06A9.996 9.996 0 0 0 2 12c0 1.6.39 3.12 1.06 4.48l3.36-2.58z"
+                  fill="#FBBC05"
+                />
+                <path
+                  d="M12 6.04c1.47 0 2.8.5 3.84 1.5l2.88-2.88C16.96 2.86 14.7 2 12 2 8.08 2 4.71 4.02 3.06 7.52l3.36 2.58C7.2 7.75 9.4 6.04 12 6.04z"
+                  fill="#EA4335"
+                />
+              </svg>
+            </span>
+            {oauthLoading ? "Redirecting..." : "Continue with Google"}
+          </Button>
           
           <p className="text-xs text-center text-muted-foreground mt-4">
             If you don&apos;t have an account, one will be created automatically.
