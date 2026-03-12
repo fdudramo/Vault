@@ -46,14 +46,16 @@ export function ManageVault({ isCollapsed }: ManageVaultProps) {
   const handleClearLocalData = () => {
     localStorage.removeItem("context-keeper-data")
     toast.success("Local data cleared")
-    window.location.reload()
+    window.dispatchEvent(new Event('storage-changed'))
+    setIsOpen(false)
   }
 
   const handleDisconnectSupabase = () => {
     localStorage.removeItem("GT_VAULT_SUPA")
     localStorage.setItem("GT_VAULT_STORAGE_TYPE", "local")
     toast.success("Disconnected from Supabase")
-    window.location.reload()
+    window.dispatchEvent(new Event('storage-changed'))
+    setIsOpen(false)
   }
 
   return (

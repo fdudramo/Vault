@@ -53,7 +53,7 @@ export default function Home() {
             <Button onClick={() => window.location.reload()}>Retry</Button>
             <Button variant="outline" onClick={() => {
               localStorage.setItem('GT_VAULT_STORAGE_TYPE', 'local');
-              window.location.reload();
+              window.dispatchEvent(new Event('storage-changed'));
             }}>Switch to Local Storage</Button>
           </div>
         </div>

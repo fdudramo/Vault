@@ -15,34 +15,49 @@ export function useAppData() {
 
   // Load storage type and initialize Supabase if needed
   useEffect(() => {
-    const type = localStorage.getItem(STORAGE_TYPE_KEY) as 'local' | 'supabase' | null;
-    if (type === 'supabase') {
-      const credsStr = localStorage.getItem(SUPA_CREDS_KEY);
-      if (credsStr) {
-        try {
-          const creds = JSON.parse(credsStr);
-          if (creds.url && creds.key) {
-            try {
-              const client = createClient(creds.url, creds.key);
-              setSupabaseClient(client);
-              setStorageType('supabase');
-            } catch (err: any) {
-              console.error("Failed to initialize Supabase client", err);
-              setError(`Failed to initialize Supabase client: ${err.message || 'Invalid URL or Key'}`);
-              setIsLoaded(true);
+    const loadConfig = () => {
+      const type = localStorage.getItem(STORAGE_TYPE_KEY) as 'local' | 'supabase' | null;
+      if (type === 'supabase') {
+        const credsStr = localStorage.getItem(SUPA_CREDS_KEY);
+        if (credsStr) {
+          try {
+            const creds = JSON.parse(credsStr);
+            if (creds.url && creds.key) {
+              try {
+                const client = createClient(creds.url, creds.key);
+                setSupabaseClient(client);
+                setStorageType('supabase');
+              } catch (err: any) {
+                console.error("Failed to initialize Supabase client", err);
+                setError(`Failed to initialize Supabase client: ${err.message || 'Invalid URL or Key'}`);
+                setIsLoaded(true);
+              }
+            } else {
+              setStorageType('local');
+              setSupabaseClient(null);
+              setError(null);
             }
-          } else {
+          } catch (e) {
             setStorageType('local');
+            setSupabaseClient(null);
+            setError(null);
           }
-        } catch (e) {
+        } else {
           setStorageType('local');
+          setSupabaseClient(null);
+          setError(null);
         }
       } else {
         setStorageType('local');
+        setSupabaseClient(null);
+        setError(null);
       }
-    } else {
-      setStorageType('local');
-    }
+    };
+
+    loadConfig();
+
+    window.addEventListener('storage-changed', loadConfig);
+    return () => window.removeEventListener('storage-changed', loadConfig);
   }, []);
 
   // Fetch data when storageType or supabaseClient changes

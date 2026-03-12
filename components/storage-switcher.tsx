@@ -33,11 +33,19 @@ export function StorageSwitcher({ isCollapsed }: StorageSwitcherProps) {
   const [supabaseKey, setSupabaseKey] = useState("")
 
   useEffect(() => {
-    const type = localStorage.getItem("GT_VAULT_STORAGE_TYPE") as "local" | "supabase" | null
-    if (type === "supabase") {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setStorageType("supabase")
+    const loadConfig = () => {
+      const type = localStorage.getItem("GT_VAULT_STORAGE_TYPE") as "local" | "supabase" | null
+      if (type === "supabase") {
+        setStorageType("supabase")
+      } else {
+        setStorageType("local")
+      }
     }
+    
+    loadConfig()
+    
+    window.addEventListener('storage-changed', loadConfig)
+    return () => window.removeEventListener('storage-changed', loadConfig)
   }, [])
 
   const handleSwitch = (type: "local" | "supabase") => {
@@ -51,7 +59,7 @@ export function StorageSwitcher({ isCollapsed }: StorageSwitcherProps) {
     
     localStorage.setItem("GT_VAULT_STORAGE_TYPE", type)
     setStorageType(type)
-    window.location.reload()
+    window.dispatchEvent(new Event('storage-changed'))
   }
 
   const handleSaveSupabase = () => {
@@ -62,8 +70,9 @@ export function StorageSwitcher({ isCollapsed }: StorageSwitcherProps) {
 
     localStorage.setItem("GT_VAULT_SUPA", JSON.stringify({ url: supabaseUrl, key: supabaseKey }))
     localStorage.setItem("GT_VAULT_STORAGE_TYPE", "supabase")
+    setStorageType("supabase")
     setShowSetupModal(false)
-    window.location.reload()
+    window.dispatchEvent(new Event('storage-changed'))
   }
 
   const sqlSnippet = `CREATE TABLE vault_apps (
