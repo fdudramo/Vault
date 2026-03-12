@@ -24,21 +24,27 @@ export function ManageVault({ isCollapsed }: ManageVaultProps) {
   const [storageType, setStorageType] = useState<"local" | "supabase">("local")
   const [supabaseUrl, setSupabaseUrl] = useState<string | null>(null)
 
-  useEffect(() => {
-    const type = localStorage.getItem("GT_VAULT_STORAGE_TYPE") as "local" | "supabase" | null
-    if (type === "supabase") {
-      setStorageType("supabase")
-      const creds = localStorage.getItem("GT_VAULT_SUPA")
-      if (creds) {
-        try {
-          const parsed = JSON.parse(creds)
-          setSupabaseUrl(parsed.url)
-        } catch (e) {
-          // ignore
+  const handleOpenChange = (newOpen: boolean) => {
+    if (newOpen) {
+      const type = localStorage.getItem("GT_VAULT_STORAGE_TYPE") as "local" | "supabase" | null
+      if (type === "supabase") {
+        setStorageType("supabase")
+        const creds = localStorage.getItem("GT_VAULT_SUPA")
+        if (creds) {
+          try {
+            const parsed = JSON.parse(creds)
+            setSupabaseUrl(parsed.url)
+          } catch (e) {
+            // ignore
+          }
         }
+      } else {
+        setStorageType("local")
+        setSupabaseUrl(null)
       }
     }
-  }, [isOpen])
+    setIsOpen(newOpen)
+  }
 
   const [confirmClearLocal, setConfirmClearLocal] = useState(false)
   const [confirmDisconnect, setConfirmDisconnect] = useState(false)
@@ -60,7 +66,7 @@ export function ManageVault({ isCollapsed }: ManageVaultProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => {
-      setIsOpen(open)
+      handleOpenChange(open)
       if (!open) {
         setConfirmClearLocal(false)
         setConfirmDisconnect(false)

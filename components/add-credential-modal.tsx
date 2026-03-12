@@ -36,13 +36,14 @@ export function AddCredentialModal({ onAdd, initialData, trigger }: AddCredentia
   const [value, setValue] = useState(initialData?.value || '');
   const [type, setType] = useState<Credential['type']>(initialData?.type || 'apikey');
 
-  useEffect(() => {
-    if (open) {
+  const handleOpenChange = (newOpen: boolean) => {
+    if (newOpen) {
       setName(initialData?.name || '');
       setValue(initialData?.value || '');
       setType(initialData?.type || 'apikey');
     }
-  }, [open, initialData]);
+    setOpen(newOpen);
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -66,7 +67,7 @@ export function AddCredentialModal({ onAdd, initialData, trigger }: AddCredentia
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         {trigger ? trigger : (
           <Button size="sm" className="gap-2 bg-blue-50 text-blue-600 hover:bg-blue-100 border border-blue-200 dark:bg-blue-900/20 dark:text-blue-400 dark:border-blue-800/50 dark:hover:bg-blue-900/40 shadow-sm">

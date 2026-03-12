@@ -167,7 +167,7 @@ export function Sidebar({ apps, selectedAppId, onSelectApp, onAddApp, isMobileOp
             <ManageVault isCollapsed={isCollapsed} />
             <StorageSwitcher isCollapsed={isCollapsed} />
             <Tooltip>
-              <TooltipTrigger>
+              <TooltipTrigger render={
                 <Button 
                   variant="ghost" 
                   size="icon"
@@ -176,7 +176,7 @@ export function Sidebar({ apps, selectedAppId, onSelectApp, onAddApp, isMobileOp
                 >
                   <LogOut className="h-4 w-4" />
                 </Button>
-              </TooltipTrigger>
+              } />
               <TooltipContent side="right">Sign Out</TooltipContent>
             </Tooltip>
           </div>

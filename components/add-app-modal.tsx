@@ -34,13 +34,14 @@ export function AddAppModal({ onAdd, isCollapsed, className, variant = "outline"
   const [description, setDescription] = useState(initialData?.description || '');
   const [url, setUrl] = useState(initialData?.url || '');
 
-  useEffect(() => {
-    if (open) {
+  const handleOpenChange = (newOpen: boolean) => {
+    if (newOpen) {
       setName(initialData?.name || '');
       setDescription(initialData?.description || '');
       setUrl(initialData?.url || '');
     }
-  }, [open, initialData]);
+    setOpen(newOpen);
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -66,7 +67,7 @@ export function AddAppModal({ onAdd, isCollapsed, className, variant = "outline"
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         {trigger ? trigger : (
           <Button 

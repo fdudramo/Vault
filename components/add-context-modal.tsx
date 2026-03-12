@@ -37,13 +37,14 @@ export function AddContextModal({ onAdd, initialData, trigger }: AddContextModal
   const [content, setContent] = useState(initialData?.content || '');
   const [type, setType] = useState<ContextItem['type']>(initialData?.type || 'url');
 
-  useEffect(() => {
-    if (open) {
+  const handleOpenChange = (newOpen: boolean) => {
+    if (newOpen) {
       setTitle(initialData?.title || '');
       setContent(initialData?.content || '');
       setType(initialData?.type || 'url');
     }
-  }, [open, initialData]);
+    setOpen(newOpen);
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -67,7 +68,7 @@ export function AddContextModal({ onAdd, initialData, trigger }: AddContextModal
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         {trigger ? trigger : (
           <Button size="sm" className="gap-2 bg-blue-50 text-blue-600 hover:bg-blue-100 border border-blue-200 dark:bg-blue-900/20 dark:text-blue-400 dark:border-blue-800/50 dark:hover:bg-blue-900/40 shadow-sm">

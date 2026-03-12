@@ -38,15 +38,16 @@ export function AddAccountModal({ onAdd, initialData, trigger }: AddAccountModal
   const [password, setPassword] = useState(initialData?.password || '');
   const [authMethod, setAuthMethod] = useState<AuthMethod>(initialData?.authMethod || 'email');
 
-  useEffect(() => {
-    if (open) {
+  const handleOpenChange = (newOpen: boolean) => {
+    if (newOpen) {
       setName(initialData?.name || '');
       setEmail(initialData?.email || '');
       setUsername(initialData?.username || '');
       setPassword(initialData?.password || '');
       setAuthMethod(initialData?.authMethod || 'email');
     }
-  }, [open, initialData]);
+    setOpen(newOpen);
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -76,7 +77,7 @@ export function AddAccountModal({ onAdd, initialData, trigger }: AddAccountModal
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         {trigger ? trigger : (
           <Button size="sm" className="gap-2">
