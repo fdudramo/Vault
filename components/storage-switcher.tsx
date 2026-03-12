@@ -21,14 +21,18 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { toast } from "sonner"
+import { useAuth } from "@/hooks/use-auth"
+import { PlansModal } from "@/components/plans-modal"
 
 interface StorageSwitcherProps {
   isCollapsed: boolean
 }
 
 export function StorageSwitcher({ isCollapsed }: StorageSwitcherProps) {
+  const { profile } = useAuth()
   const [storageType, setStorageType] = useState<"local" | "supabase">("local")
   const [showSetupModal, setShowSetupModal] = useState(false)
+  const [showPlansModal, setShowPlansModal] = useState(false)
   const [supabaseUrl, setSupabaseUrl] = useState("")
   const [supabaseKey, setSupabaseKey] = useState("")
 
@@ -50,6 +54,11 @@ export function StorageSwitcher({ isCollapsed }: StorageSwitcherProps) {
 
   const handleSwitch = (type: "local" | "supabase") => {
     if (type === "supabase") {
+      if (!profile || profile.plan !== 'paid') {
+        setShowPlansModal(true)
+        return
+      }
+
       const creds = localStorage.getItem("GT_VAULT_SUPA")
       if (!creds) {
         setShowSetupModal(true)
@@ -196,6 +205,8 @@ CREATE POLICY "Allow all operations" ON vault_apps FOR ALL USING (true) WITH CHE
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <PlansModal isOpen={showPlansModal} onClose={() => setShowPlansModal(false)} />
     </>
   )
 }

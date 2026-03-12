@@ -2,13 +2,16 @@
 
 import { useState, useEffect } from 'react';
 import { useAppData } from '@/hooks/use-app-data';
+import { useAuth } from '@/hooks/use-auth';
 import { Sidebar } from '@/components/sidebar';
 import { AppDetails } from '@/components/app-details';
 import { HomeDashboard } from '@/components/home-dashboard';
+import { AuthScreen } from '@/components/auth-screen';
 import { LayoutGrid, Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export default function Home() {
+  const { user, isLoading: authLoading } = useAuth();
   const { apps, isLoaded, error, addApp, updateApp, deleteApp } = useAppData();
   const [selectedAppId, setSelectedAppId] = useState<string | null>('home');
   const [jumpToAccountId, setJumpToAccountId] = useState<string | null>(null);
@@ -37,7 +40,7 @@ export default function Home() {
     return () => window.removeEventListener('storage-changed', handleStorageChange);
   }, []);
 
-  if (!isLoaded && !error) {
+  if (authLoading || (!isLoaded && !error && user)) {
     return (
       <div className="flex h-screen items-center justify-center bg-background">
         <div className="animate-pulse flex flex-col items-center gap-4">
@@ -46,6 +49,10 @@ export default function Home() {
         </div>
       </div>
     );
+  }
+
+  if (!user) {
+    return <AuthScreen />;
   }
 
   if (error) {

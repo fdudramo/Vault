@@ -71,7 +71,7 @@ export function ManageVault({ isCollapsed }: ManageVaultProps) {
           variant="ghost"
           size={isCollapsed ? "icon" : "default"}
           className={cn(
-            "w-full justify-start rounded-lg hover:bg-muted mb-2",
+            "w-full justify-start rounded-lg hover:bg-muted",
             isCollapsed ? "h-10 w-10 p-0 justify-center" : "px-3"
           )}
         >

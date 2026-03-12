@@ -7,9 +7,10 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { AddAppModal } from './add-app-modal';
 import { StorageSwitcher } from './storage-switcher';
 import { ManageVault } from './manage-vault';
-import { LayoutGrid, Menu, Search, X } from 'lucide-react';
+import { LayoutGrid, Menu, Search, X, LogOut } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { useAuth } from '@/hooks/use-auth';
 
 interface SidebarProps {
   apps: AppItem[];
@@ -22,6 +23,7 @@ interface SidebarProps {
 
 export function Sidebar({ apps, selectedAppId, onSelectApp, onAddApp, isMobileOpen, onMobileClose }: SidebarProps) {
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const { signOut, profile } = useAuth();
 
   return (
     <TooltipProvider delay={500}>
@@ -147,15 +149,36 @@ export function Sidebar({ apps, selectedAppId, onSelectApp, onAddApp, isMobileOp
         </ScrollArea>
         
         {!isCollapsed && (
-          <div className="p-4 text-xs text-muted-foreground text-center">
+          <div className="p-4 flex flex-col gap-2 border-t">
             <ManageVault isCollapsed={isCollapsed} />
             <StorageSwitcher isCollapsed={isCollapsed} />
+            <Button 
+              variant="ghost" 
+              className="w-full justify-start text-muted-foreground hover:text-destructive" 
+              onClick={signOut}
+            >
+              <LogOut className="h-4 w-4 mr-3" />
+              Sign Out
+            </Button>
           </div>
         )}
         {isCollapsed && (
-          <div className="p-4 flex flex-col items-center gap-2">
+          <div className="p-4 flex flex-col items-center gap-2 border-t">
             <ManageVault isCollapsed={isCollapsed} />
             <StorageSwitcher isCollapsed={isCollapsed} />
+            <Tooltip>
+              <TooltipTrigger>
+                <Button 
+                  variant="ghost" 
+                  size="icon"
+                  className="w-10 h-10 text-muted-foreground hover:text-destructive" 
+                  onClick={signOut}
+                >
+                  <LogOut className="h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="right">Sign Out</TooltipContent>
+            </Tooltip>
           </div>
         )}
       </div>

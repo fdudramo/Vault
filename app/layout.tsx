@@ -4,6 +4,7 @@ import './globals.css'; // Global styles
 import { ThemeProvider } from '@/components/theme-provider';
 import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/sonner";
+import { AuthProvider } from '@/hooks/use-auth';
 
 const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
@@ -22,8 +23,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           forcedTheme="dark"
           disableTransitionOnChange
         >
-          {children}
-          <Toaster richColors />
+          <AuthProvider>
+            {children}
+            <Toaster richColors />
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>
