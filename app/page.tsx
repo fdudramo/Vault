@@ -29,6 +29,14 @@ export default function Home() {
     return () => document.removeEventListener("keydown", down);
   }, []);
 
+  useEffect(() => {
+    const handleStorageChange = () => {
+      setSelectedAppId('home');
+    };
+    window.addEventListener('storage-changed', handleStorageChange);
+    return () => window.removeEventListener('storage-changed', handleStorageChange);
+  }, []);
+
   if (!isLoaded && !error) {
     return (
       <div className="flex h-screen items-center justify-center bg-background">

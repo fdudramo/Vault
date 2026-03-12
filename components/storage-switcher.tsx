@@ -60,6 +60,7 @@ export function StorageSwitcher({ isCollapsed }: StorageSwitcherProps) {
     localStorage.setItem("GT_VAULT_STORAGE_TYPE", type)
     setStorageType(type)
     window.dispatchEvent(new Event('storage-changed'))
+    toast.success(`Successfully switched to ${type === 'supabase' ? 'Supabase' : 'Local Storage'}`)
   }
 
   const handleSaveSupabase = () => {
@@ -73,6 +74,7 @@ export function StorageSwitcher({ isCollapsed }: StorageSwitcherProps) {
     setStorageType("supabase")
     setShowSetupModal(false)
     window.dispatchEvent(new Event('storage-changed'))
+    toast.success("Successfully connected and switched to Supabase")
   }
 
   const sqlSnippet = `CREATE TABLE vault_apps (
