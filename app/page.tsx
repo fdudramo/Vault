@@ -532,7 +532,9 @@ export default function LandingPage() {
                     <Zap className="size-6" aria-hidden />
                   </CardDecorator>
 
-                  <h3 className="mt-6 font-medium">one vault per app</h3>
+                  <h3 className="mt-6 font-medium text-lg">
+                    one vault per app
+                  </h3>
                 </CardHeader>
 
                 <CardContent>
@@ -549,13 +551,15 @@ export default function LandingPage() {
                     <Settings2 className="size-6" aria-hidden />
                   </CardDecorator>
 
-                  <h3 className="mt-6 font-medium">You have full control</h3>
+                  <h3 className="mt-6 font-medium text-lg">
+                    You have full control
+                  </h3>
                 </CardHeader>
 
                 <CardContent>
                   <p className="mt-3 text-sm text-muted-foreground">
-                    From design elements to functionality, you have complete
-                    control to create a unique and personalized experience.
+                    nothing is linked to your account. bring your own supabase
+                    db or use local storage.
                   </p>
                 </CardContent>
               </Card>
@@ -566,7 +570,7 @@ export default function LandingPage() {
                     <Sparkles className="size-6" aria-hidden />
                   </CardDecorator>
 
-                  <h3 className="mt-6 font-medium">its free</h3>
+                  <h3 className="mt-6 font-medium text-lg">its free</h3>
                 </CardHeader>
 
                 <CardContent>
