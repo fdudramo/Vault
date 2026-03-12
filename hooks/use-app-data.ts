@@ -9,6 +9,7 @@ const STORAGE_TYPE_KEY = 'GT_VAULT_STORAGE_TYPE'; // 'local' or 'supabase'
 export function useAppData() {
   const [apps, setApps] = useState<AppItem[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [storageType, setStorageType] = useState<'local' | 'supabase'>('local');
   const [supabaseClient, setSupabaseClient] = useState<SupabaseClient | null>(null);
 
@@ -21,9 +22,15 @@ export function useAppData() {
         try {
           const creds = JSON.parse(credsStr);
           if (creds.url && creds.key) {
-            const client = createClient(creds.url, creds.key);
-            setSupabaseClient(client);
-            setStorageType('supabase');
+            try {
+              const client = createClient(creds.url, creds.key);
+              setSupabaseClient(client);
+              setStorageType('supabase');
+            } catch (err: any) {
+              console.error("Failed to initialize Supabase client", err);
+              setError(`Failed to initialize Supabase client: ${err.message || 'Invalid URL or Key'}`);
+              setIsLoaded(true);
+            }
           } else {
             setStorageType('local');
           }
@@ -68,8 +75,10 @@ export function useAppData() {
             createdAt: row.created_at
           }));
           setApps(loadedApps);
-        } catch (e) {
+          setError(null);
+        } catch (e: any) {
           console.error('Failed to fetch from Supabase', e);
+          setError(e.message || 'Failed to connect to Supabase. Check your credentials and RLS policies.');
           setApps([]);
         } finally {
           setIsLoaded(true);
@@ -94,15 +103,17 @@ export function useAppData() {
     setApps((prev) => [...prev, app]);
     if (storageType === 'supabase' && supabaseClient) {
       try {
-        await supabaseClient.from('vault_apps').insert({
+        const { error } = await supabaseClient.from('vault_apps').insert({
           id: app.id,
           name: app.name,
           url: app.url,
           accounts: app.accounts,
           created_at: app.createdAt
         });
-      } catch (e) {
+        if (error) throw error;
+      } catch (e: any) {
         console.error('Failed to add to Supabase', e);
+        setError(`Failed to add app: ${e.message}`);
       }
     }
   };
@@ -111,13 +122,15 @@ export function useAppData() {
     setApps((prev) => prev.map((app) => (app.id === updatedApp.id ? updatedApp : app)));
     if (storageType === 'supabase' && supabaseClient) {
       try {
-        await supabaseClient.from('vault_apps').update({
+        const { error } = await supabaseClient.from('vault_apps').update({
           name: updatedApp.name,
           url: updatedApp.url,
           accounts: updatedApp.accounts
         }).eq('id', updatedApp.id);
-      } catch (e) {
+        if (error) throw error;
+      } catch (e: any) {
         console.error('Failed to update in Supabase', e);
+        setError(`Failed to update app: ${e.message}`);
       }
     }
   };
@@ -126,9 +139,11 @@ export function useAppData() {
     setApps((prev) => prev.filter(app => app.id !== appId));
     if (storageType === 'supabase' && supabaseClient) {
       try {
-        await supabaseClient.from('vault_apps').delete().eq('id', appId);
-      } catch (e) {
+        const { error } = await supabaseClient.from('vault_apps').delete().eq('id', appId);
+        if (error) throw error;
+      } catch (e: any) {
         console.error('Failed to delete from Supabase', e);
+        setError(`Failed to delete app: ${e.message}`);
       }
     }
   };
@@ -136,6 +151,7 @@ export function useAppData() {
   return {
     apps,
     isLoaded,
+    error,
     addApp,
     updateApp,
     deleteApp,
