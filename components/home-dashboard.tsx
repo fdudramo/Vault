@@ -62,7 +62,7 @@ export function HomeDashboard({ apps, searchQuery, onSearchChange, onSelectApp, 
     <div className="flex flex-col h-full space-y-4 md:space-y-6 max-w-4xl mx-auto px-1">
       <div className="hidden lg:flex items-center justify-between">
         <h2 className="text-2xl md:text-3xl font-bold tracking-tight">Vault Home</h2>
-        <AddAppModal onAdd={onAddApp} />
+        <AddAppModal onAdd={onAddApp} className="w-auto justify-center gap-2 px-4" />
       </div>
 
       <div className="hidden lg:block relative group">

@@ -44,7 +44,12 @@ export function Sidebar({ apps, selectedAppId, onSelectApp, onAddApp, isMobileOp
           isCollapsed ? "w-[72px]" : "w-64"
         )}
       >
-        <div className={cn("p-4 flex items-center h-16", isCollapsed ? "justify-center" : "justify-between")}>
+        <div
+          className={cn(
+            "p-4 flex h-16",
+            isCollapsed ? "flex-col items-center justify-center gap-2 py-3 h-auto" : "items-center justify-between"
+          )}
+        >
           {!isCollapsed && (
             <Link href="/" className="flex items-center gap-2 font-semibold text-xl text-primary truncate hover:opacity-80 transition-opacity">
               <LayoutGrid className="h-6 w-6 shrink-0" />
@@ -52,14 +57,17 @@ export function Sidebar({ apps, selectedAppId, onSelectApp, onAddApp, isMobileOp
             </Link>
           )}
           {isCollapsed && (
-            <Link href="/" className="flex items-center justify-center hover:opacity-80 transition-opacity mr-2">
+            <Link href="/" className="flex h-8 w-8 items-center justify-center rounded-lg hover:opacity-80 transition-opacity">
               <LayoutGrid className="h-6 w-6 shrink-0 text-primary" />
             </Link>
           )}
           <Button 
             variant="ghost" 
             size="icon" 
-            className="shrink-0 rounded-lg hover:bg-muted"
+            className={cn(
+              "shrink-0 rounded-lg hover:bg-muted",
+              isCollapsed && "h-8 w-8"
+            )}
             onClick={() => {
               if (onMobileClose && isMobileOpen) {
                 onMobileClose();
