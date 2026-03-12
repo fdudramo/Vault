@@ -39,7 +39,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         .from('profiles')
         .select('*')
         .eq('id', userId)
-        .single()
+        .maybeSingle()
       
       if (error) {
         console.error('Error fetching profile:', error)
@@ -52,9 +52,38 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
+  const createProfile = async (user: User) => {
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .insert({
+          id: user.id,
+          email: user.email ?? '',
+          plan: 'free',
+        })
+        .select('*')
+        .single()
+
+      if (error) {
+        console.error('Error creating profile:', error)
+        return null
+      }
+      return data as Profile
+    } catch (e) {
+      console.error('Exception creating profile:', e)
+      return null
+    }
+  }
+
+  const ensureProfile = async (user: User) => {
+    const existing = await fetchProfile(user.id)
+    if (existing) return existing
+    return createProfile(user)
+  }
+
   const refreshProfile = async () => {
     if (user) {
-      const p = await fetchProfile(user.id)
+      const p = await ensureProfile(user)
       setProfile(p)
     }
   }
@@ -68,7 +97,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(session?.user ?? null)
         
         if (session?.user) {
-          const p = await fetchProfile(session.user.id)
+          const p = await ensureProfile(session.user)
           setProfile(p)
         }
       } catch (e) {
@@ -86,7 +115,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       try {
         setUser(session?.user ?? null)
         if (session?.user) {
-          const p = await fetchProfile(session.user.id)
+          const p = await ensureProfile(session.user)
           setProfile(p)
         } else {
           setProfile(null)

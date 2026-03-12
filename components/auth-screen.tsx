@@ -60,7 +60,7 @@ export function AuthScreen() {
   const handleGoogleSignIn = async () => {
     setOauthLoading(true)
     try {
-      const redirectTo = `${window.location.origin}/`
+      const redirectTo = `${window.location.origin}/app`
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
